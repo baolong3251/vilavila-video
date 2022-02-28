@@ -1,0 +1,53 @@
+.userDetails_tierOption{
+    margin: 10px;
+    padding: 10px;
+    width: 400px;
+    background-color: #333333;
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    -webkit-box-shadow: 0 3px 7px rgba(56, 56, 56, 0.3);
+    -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+    position: relative;
+
+    h2{
+        color: white;
+        text-align: center;
+        padding-bottom: 5px;
+        border-bottom: 2px solid rgba(68, 167, 98, 0.753);
+    }
+
+    p{
+        font-size: 15px;
+    }
+
+    .tier-edit-option{
+        position: absolute;
+        top: 0;
+        right: 5px;
+        display: flex;
+
+        .tier-edit-option-item{
+            background-color: #1abc9cab;
+            padding: 5px;
+            border-bottom-left-radius: 5px;
+            border-bottom-right-radius: 5px;
+            margin-left: 10px;
+            cursor: pointer;
+            
+            .icon{
+                font-size: 20px;
+            }
+            
+        }
+    }
+}
+
+.flex-thing{
+    display: flex;
+    
+    button{
+        margin: 10px;
+    }
+}

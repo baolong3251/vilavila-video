@@ -1,0 +1,16 @@
+.displaySearch{
+    width: 90%;
+    margin: auto;
+    flex: 0.8;
+    padding: 40px 20px;
+    padding-bottom: 0;
+    background-color: #f9f9f9;
+
+    h2{
+        margin-left: 5px;
+        margin-bottom: 20px;
+        font-weight: 700;
+        text-transform: uppercase;
+        border-bottom: 1px solid lightgray;
+    }
+}

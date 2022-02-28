@@ -1,23 +1,148 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from "react";
+import { Switch, Route } from 'react-router-dom';
+import './App.scss';
+import { useDispatch } from "react-redux";
+import { checkUserSession } from "./redux/User/user.action";
+
+// HOC
+import WithAuth from "./hoc/withAuth"
+
+// PAGES
+
+import HomepageLayout from './layouts/HomepageLayout';
+import MainLayout from './layouts/MainLayout';
+import Homepage from './pages/Homepage';
+import Login from './pages/Login';
+import Registration from "./pages/Registration";
+import Search from "./pages/Search";
+import UploadVideo from "./pages/UploadVideo";
+import UploadImage from "./pages/UploadImage";
+import Video from "./pages/Video";
+import VideoLayout from "./layouts/VideoLayout";
+import User from "./pages/User";
+import UserLayout from "./layouts/UserLayout";
+import UserVideos from "./pages/UserVideos";
+import UserTiers from "./pages/UserTiers";
+import UserEditVideo from "./components/UserEditVideo";
+import UserImages from "./pages/UserImages";
+
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(checkUserSession())
+  }, [])
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+        
+        <Switch>
+          {/* ====================HOME PAGE================== */}
+          <Route exact path="/" render={() => (
+            <HomepageLayout >
+              <Homepage />
+            </HomepageLayout>
+          )} />
+
+          {/* <Route exact path="/:filterType" render={() => (
+            <HomepageLayout >
+              <Homepage />
+            </HomepageLayout>
+          )} /> */}
+
+          {/* ====================SIGN IN PAGE================== */}
+          <Route path="/login"
+            render={() => (
+              <MainLayout >
+                <Login />
+              </MainLayout>
+            )}
+          />
+
+          {/* ====================SIGN UP PAGE================== */}
+          <Route path="/registration"
+            render={() => (
+              <MainLayout >
+                <Registration />
+              </MainLayout>
+            )}
+          />
+
+          {/* ====================SEARCH PAGE================== */}
+          <Route path="/search/:searchTerm"
+            render={() => (
+              <MainLayout >
+                <Search />
+              </MainLayout>
+            )}
+          />
+
+          {/* ====================UPLOAD VIDEO PAGE================== */}
+          <Route path="/uploadvideo"
+            render={() => (
+              <WithAuth>
+                <MainLayout >
+                  <UploadVideo />
+                </MainLayout>
+              </WithAuth>
+            )}
+          />
+
+          {/* ====================UPLOAD IMAGE PAGE================== */}
+          <Route path="/uploadimage"
+            render={() => (
+              <WithAuth>
+                <MainLayout >
+                  <UploadImage />
+                </MainLayout>
+              </WithAuth>
+            )}
+          />
+
+          {/* ====================PRODUCT DETIALS PAGE =================== */}
+          <Route exact path="/video/:videoID" render={() => ( ///:videoID
+            <VideoLayout>
+              <Video />
+            </VideoLayout>
+          )}/>
+
+          {/* ====================USER DETIALS PAGE =================== */}
+          <Route exact path="/user/:userID" render={() => ( ///:videoID
+            <UserLayout>
+              <User />
+            </UserLayout>
+          )}/>
+
+          {/* ====================USER DETIALS VIDEOS PAGE =================== */}
+          <Route exact path="/user/videos/:userID" render={() => ( ///:videoID
+            <UserLayout>
+              <UserVideos />
+            </UserLayout>
+          )}/>
+
+          {/* ====================USER DETIALS EDIT VIDEO PAGE =================== */}
+          <Route exact path="/user/:userID/edit/:videoID" render={() => ( ///:videoID
+            <UserLayout>
+              <UserEditVideo />
+            </UserLayout>
+          )}/>
+
+          {/* ====================USER DETIALS TIERS PAGE =================== */}
+          <Route exact path="/user/tiers/:userID" render={() => ( ///:videoID
+            <UserLayout>
+              <UserTiers />
+            </UserLayout>
+          )}/>
+
+          {/* ====================USER DETIALS TIERS PAGE =================== */}
+          <Route exact path="/user/images/:userID" render={() => ( ///:videoID
+            <UserLayout>
+              <UserImages />
+            </UserLayout>
+          )}/>
+
+        </Switch>
     </div>
   );
 }

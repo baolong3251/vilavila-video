@@ -1,0 +1,27 @@
+.imgOnScreen_right{
+    position: fixed;
+    width: 300px;
+    z-index: -1;
+    bottom: 0px;
+    right: -90px;
+
+    img {
+        width: 100%;
+        height: 100%;
+        margin: auto;
+    }
+}
+
+.imgOnScreen_left{
+    position: fixed;
+    width: 300px;
+    z-index: -1;
+    bottom: -10px;
+    left: -90px;
+
+    img {
+        width: 100%;
+        height: 100%;
+        margin: auto;
+    }
+}
