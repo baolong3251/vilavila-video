@@ -168,7 +168,7 @@ function Header() {
                                                 </div>
                                                 Trang cá nhân
                                             </Link>
-                                            <Link to={`/uploadimage`} className="dropdown_menuItem">
+                                            <Link to={`/point/${currentUser.id}`} className="dropdown_menuItem">
                                                 Điểm hiện tại: {new Intl.NumberFormat().format(point)} điểm
                                                 (+)
                                             </Link>

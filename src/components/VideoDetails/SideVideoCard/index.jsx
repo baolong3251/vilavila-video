@@ -27,10 +27,12 @@ function SideVideoCard({category, tags}) {
             //     ))
             // })
 
-            let ref = firestore.collection("videos")
+            let ref = firestore.collection("videos").where("tier", "==", "")
 
             if(tags) ref = ref.where("tags", "array-contains-any", tags)
             if(!tags) ref = ref.where("category", "==", category)
+
+            ref = ref.where("tier", "==", "")
             
             ref.get().then(
                 (snapshot) => {

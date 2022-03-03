@@ -17,12 +17,13 @@ export const handleAddImage = image => {
     })
 }
 
-export const handleFetchImages = ({ filterType, startAfterDoc, persistImages=[] }) => {
+export const handleFetchImages = ({ filterType, filterTypeTag, pageSize ,startAfterDoc, persistImages=[] }) => {
     return new Promise((resolve, reject) => {
-        const pageSize = 6
+        // const pageSize = 6
 
-        let ref = firestore.collection('images').orderBy('createdDate', 'desc').limit(pageSize)
+        let ref = firestore.collection('images').orderBy('createdDate', 'desc').where("tier", "==", "").where("privacy", "==", "public").limit(pageSize)
         
+        if (filterTypeTag) ref = ref.where('tags', 'array-contains', filterTypeTag);
         if (filterType) ref = ref.where('imageCategory', '==', filterType);
         if (startAfterDoc) ref = ref.startAfter(startAfterDoc);
         

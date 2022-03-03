@@ -14,6 +14,7 @@ import 'moment/locale/vi';
 import { useSelector } from 'react-redux';
 import AlertModal from '../../AlertModal';
 import Button from "../../Forms/Button"
+import { Link } from 'react-router-dom';
 
 const mapState = state => ({
     currentUser: state.user.currentUser,
@@ -275,7 +276,7 @@ function Main({id, url, title, views, desc, date, tags}) {
 
                 {!date && [<>{views} lượt xem</>]}
 
-                {date && [<>{new Intl.NumberFormat().format(views)} lượt xem • {moment(date.toDate()).locale('vi').fromNow()}</>]}
+                {date && [<>{new Intl.NumberFormat().format(views)} lượt xem • {moment(date.toDate()).locale('vi').calendar()}</>]}
                 
             </div>
             
@@ -304,9 +305,12 @@ function Main({id, url, title, views, desc, date, tags}) {
             {tags ?
             tags.map((tag) => {
                 return(
-                    <span className='tag'>
-                        {tag} 
-                    </span>
+                    <Link to={`/videos/tag/${tag}`}>
+                        <span className='tag'>
+                            {tag} 
+                        </span>
+                    </Link>
+                    
                 )
             }) : null
             }

@@ -12,7 +12,6 @@ import 'moment/locale/vi';
 function VideoCard(video) {
     const [dataChannel, setDataChannel] = useState([])
     const dispatch = useDispatch()
-    const [quantity, setQuantity] = useState(1)
     const history = useHistory()
     const {
         title,
@@ -40,14 +39,13 @@ function VideoCard(video) {
             setDataChannel({
                     id: snapshot.id, 
                     displayName: snapshot.data().displayName,
-                    channelImage: snapshot.data().channelImage,
+                    channelImage: snapshot.data().avatar,
             })
             
         })
     }
 
-    console.log(videoAdminUID)
-    console.log(dataChannel)
+    
 
     return (
         <div className='videoCard'>
@@ -55,12 +53,20 @@ function VideoCard(video) {
             <Link to={`/video/${documentID}`} className='videoCard_thumbnail'>
                 {thumbnail !== '' ? 
                     <img src={thumbnail}  /> : 
-                <ReactPlayer 
-                    className="react-player"
-                    url={sourceLink} 
-                    width="100%"
-                    height="100%"
-                /> }
+                    
+                    <div className='thing'>
+                        
+                        <div className='thing-thing'>
+                        
+                        </div>
+                        <ReactPlayer 
+                            className="react-player"
+                            url={sourceLink} 
+                            width="100%"
+                            height="100%"
+                        /> 
+                    </div>
+                }
                 
             </Link>
             {/* <img className='videoCard_thumbnail' src={image}  /> */}

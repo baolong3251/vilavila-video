@@ -26,15 +26,21 @@ function VideoCard(props) {
 
     return (
         <div className='videoDetails_rightSide_videoCards'>
-            <Link className='videoDetails_rightSide_videoCardsThumbnail'>
+            <Link to={`/video/${props.video.vid}`} className='videoDetails_rightSide_videoCardsThumbnail'>
                 {props.video.thumbnail ? <img className='videoCards_img' src={props.video.thumbnail} />
                 :
-                <ReactPlayer 
-                    className="react-player"
-                    url={props.video.sourceLink} 
-                    width="100%"
-                    height="100%"
-                />
+                <div className='thing'>
+                        
+                    <div className='thing-thing'>
+                    
+                    </div>
+                    <ReactPlayer 
+                        className="react-player"
+                        url={props.video.sourceLink} 
+                        width="100%"
+                        height="100%"
+                    />
+                </div>
                 }
             </Link>
             <div className='videoDetails_rightSide_videoCardsInfo'>

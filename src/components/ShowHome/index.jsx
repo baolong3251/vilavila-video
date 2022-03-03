@@ -1,6 +1,7 @@
 import React from 'react'
 import AdOnTop from '../DisplayAd/AdOnTop'
 import FollowingVideo from '../FollowingVideo'
+import ImagesForHomePage from '../ImagesForHomePage'
 import "./style_showhome.scss"
 
 
@@ -16,9 +17,7 @@ function ShowHome() {
                 new random job
             </div>
 
-            <div className='container_video'>
-                picture
-            </div>
+            <ImagesForHomePage />
 
             <div className='container_video'>
                 music

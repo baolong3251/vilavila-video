@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import ReactPlayer from 'react-player'
 import "./style_videoDetails.scss"
 import { useParams, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -49,7 +48,7 @@ function VideoDetails() {
                 setVideo({})
             )
         }
-    }, [])
+    }, [videoID])
 
     useEffect(() => {
         if (videoAdminUID && channel.length == 0) {

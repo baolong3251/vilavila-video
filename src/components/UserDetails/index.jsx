@@ -3,9 +3,7 @@ import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { firestore } from '../../firebase/utils'
-import HorizontalVideoCard from '../HorizontalVideoCard'
 import UserTierTables from '../UserTierTables'
-import VerticalVideoCard from '../VerticalVideoCard'
 import "./style_userDetails.scss"
 
 const mapState = ({ user }) => ({

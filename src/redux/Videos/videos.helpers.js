@@ -16,13 +16,15 @@ export const handleAddVideo = video => {
     })
 }
 
-export const handleFetchVideos = ({ filterType, startAfterDoc, persistVideos=[] }) => {
+export const handleFetchVideos = ({ filterType, currentUserId, filterTypeTag, pageSize, startAfterDoc, persistVideos=[] }) => {
     return new Promise((resolve, reject) => {
-        const pageSize = 6
+        // const pageSize = 8
 
-        let ref = firestore.collection('videos').orderBy('createdDate', 'desc').where("tier", "==", "").limit(pageSize)
+        let ref = firestore.collection('videos').orderBy('createdDate', 'desc').where("tier", "==", "").where("privacy", "==", "public").limit(pageSize)
         
+        if (filterTypeTag) ref = ref.where('tags', 'array-contains', filterTypeTag);
         if (filterType) ref = ref.where('category', '==', filterType);
+        if (currentUserId) ref = ref.where('videoAdminUID', 'in', currentUserId)
         if (startAfterDoc) ref = ref.startAfter(startAfterDoc);
         
         ref

@@ -25,6 +25,11 @@ import UserVideos from "./pages/UserVideos";
 import UserTiers from "./pages/UserTiers";
 import UserEditVideo from "./components/UserEditVideo";
 import UserImages from "./pages/UserImages";
+import Point from "./pages/Point";
+import Image from "./pages/Image";
+import ImageLayout from "./layouts/ImageLayout";
+import Videos from "./pages/Videos";
+import Images from "./pages/Images";
 
 
 function App() {
@@ -100,11 +105,69 @@ function App() {
             )}
           />
 
-          {/* ====================PRODUCT DETIALS PAGE =================== */}
+          {/* ====================VIDEOS PAGE================== */}
+          <Route exact path="/videos"
+            render={() => ( 
+              <MainLayout >
+                <Videos />
+              </MainLayout>    
+            )}
+          />
+
+          <Route exact path="/videos/:filterType"
+            render={() => ( 
+              <MainLayout >
+                <Videos />
+              </MainLayout>    
+            )}
+          />
+
+          <Route exact path="/videos/tag/:filterTypeTag"
+            render={() => ( 
+              <MainLayout >
+                <Videos />
+              </MainLayout>    
+            )}
+          />
+
+          {/* ====================IMAGES PAGE================== */}
+          <Route exact path="/images"
+            render={() => ( 
+              <MainLayout >
+                <Images />
+              </MainLayout>    
+            )}
+          />
+
+          <Route exact path="/images/:filterType"
+            render={() => ( 
+              <MainLayout >
+                <Images />
+              </MainLayout>    
+            )}
+          />
+
+          <Route exact path="/images/tag/:filterTypeTag"
+            render={() => ( 
+              <MainLayout >
+                <Images />
+              </MainLayout>    
+            )}
+          />
+          
+
+          {/* ====================VIDEO DETIALS PAGE =================== */}
           <Route exact path="/video/:videoID" render={() => ( ///:videoID
             <VideoLayout>
               <Video />
             </VideoLayout>
+          )}/>
+
+          {/* ====================IMAGE DETIALS PAGE =================== */}
+          <Route exact path="/image/:imageID" render={() => ( ///:videoID
+            <ImageLayout>
+              <Image />
+            </ImageLayout>
           )}/>
 
           {/* ====================USER DETIALS PAGE =================== */}
@@ -140,6 +203,13 @@ function App() {
             <UserLayout>
               <UserImages />
             </UserLayout>
+          )}/>
+
+          {/* ==================== POINT PAGE =================== */}
+          <Route exact path="/point/:userID" render={() => ( ///:videoID
+            <MainLayout>
+              <Point />
+            </MainLayout>
           )}/>
 
         </Switch>

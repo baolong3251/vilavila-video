@@ -413,10 +413,10 @@ function UploadVideo() {
                             tags.map((tag) => {
                                 return(
                                     <span className='tag'>
-                                    {tag} 
-                                    <div onClick={() => handleDeleteTag(tag)} className='del-tag'>
-                                        x
-                                    </div>
+                                        {tag} 
+                                        <div onClick={() => handleDeleteTag(tag)} className='del-tag'>
+                                            x
+                                        </div>
                                     </span>
                                 )
                             })

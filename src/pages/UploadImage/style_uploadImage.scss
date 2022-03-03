@@ -2,6 +2,8 @@
     margin: auto;
     width: 90%;
     background-color: #f9f9f9;
+    padding: 10px;
+    border-radius: 5px;
 
     button{
         width: 50%;
@@ -76,11 +78,21 @@
             span{
                 margin-right: 8px;
                 padding: 5px;
+                position: relative;
             }
 
             .tag{
                 border-radius: 5px;
                 background-color: aquamarine;
+            }
+
+            .del-tag{
+                position: absolute;
+                top: -5px;
+                right: -5px;
+                color: red;
+                cursor: pointer;
+                font-weight: 700;
             }
         }
 

@@ -8,14 +8,25 @@
         background-color: #f9f9f9;
         padding: 40px 20px;
         padding-bottom: 0;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        margin-top: 10px;
     }
 
-    .container_video > h2 {
+    // .container_video > h2 {
+    //     margin-left: 5px;
+    //     margin-bottom: 20px;
+    //     font-weight: 700;
+    //     text-transform: uppercase;
+    //     border-bottom: 1px solid lightgray;
+    // }
+
+    .label_video_type{
         margin-left: 5px;
         margin-bottom: 20px;
         font-weight: 700;
         text-transform: uppercase;
-        border-bottom: 1px solid lightgray;
+        border-bottom: 2px solid #1abc9c;
     }
 
     .layout_video{
@@ -23,4 +34,13 @@
         flex-wrap: wrap;
         justify-content: center;
     }
+}
+
+// .following-thing{
+    
+// }
+
+.upper{
+    width: 90%;
+    margin: auto;
 }

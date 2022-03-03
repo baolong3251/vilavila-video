@@ -37,10 +37,11 @@ function UploadImage() {
     const [tempTag, setTempTag] = useState('')
     const [tags, setTags] = useState([])
     const [privacy, setPrivacy] = React.useState('private');
-    const [views, setViews] = useState(0)
-    const [likes, setLikes] = useState(0)
+    // const [views, setViews] = useState(0)
+    // const [likes, setLikes] = useState(0)
     const [imageId, setImageId] = useState('')
     const userid = auth.currentUser.uid
+    const [tier, setTier] = useState('')
 
     const [fileImages, setFileImages] = useState([]);
     const [progress, setProgress] = useState(0);
@@ -87,6 +88,10 @@ function UploadImage() {
         if(fileImages == '') return
         const number = Math.random();
         fileImages.map((image) => {
+            if(fileImages[0].size > 10e6) {
+                alert('file của bạn đã vượt quá 10MB xin hãy chọn file khác')
+                return
+            }
             const name = fileImages[0].name
             const uploadTask = storage.ref(`images/${userid}_images/${name}_${number}/${image.name}`).put(image);
             promises.push(uploadTask);
@@ -173,6 +178,12 @@ function UploadImage() {
   
     }
 
+    const handleDeleteTag = (tagName) => {
+        var someArray = tags
+        someArray = someArray.filter(tagThing => tagThing !== tagName)
+        setTags(someArray)
+    }
+
     useEffect(() => {
         if(fileImageUrl == '') {
             setProgress(0)
@@ -196,10 +207,11 @@ function UploadImage() {
                 desc,
                 privacy,
                 sourceLink,
-                views,
-                likes,
+                // views,
+                // likes,
                 imageId,
                 tags,
+                tier,
             })
         )
 
@@ -225,7 +237,7 @@ function UploadImage() {
                     <FormInput 
                         label="Tên"
                         type="Text"
-                        placeholder="Tên Video"
+                        placeholder="Tựa hình ảnh"
                         value={title}
                         handleChange={e => setTitle(e.target.value)}
                     />
@@ -290,7 +302,10 @@ function UploadImage() {
                             tags.map((tag) => {
                                 return(
                                     <span className='tag'>
-                                    {tag} 
+                                        {tag} 
+                                        <div onClick={() => handleDeleteTag(tag)} className='del-tag'>
+                                            x
+                                        </div>
                                     </span>
                                 )
                             })

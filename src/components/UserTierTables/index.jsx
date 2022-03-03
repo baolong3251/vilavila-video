@@ -19,10 +19,12 @@ function UserTierTables(props) {
     const [newTierPoint, setNewTierPoint] = useState(props.tier.cost*1)
     const [desc, setDesc] = useState(props.tier.desc)
     const [userInfo, setUserInfo] = useState([])
+    const [userOfTierInfo, setUserOfTierInfo] = useState([])
     const [arraySigned, setArraySigned] = useState([])
     const [statSigned, setStatSigned] = useState(false)
     const [tierUserSigned, setTierUserSigned] = useState([])
     const [tierUserSignedNum, setTierUserSignedNum] = useState(0)
+    const [channelPoint, setChannelPoint] = useState(0)
 
     const [hideModal, setHideModal] = useState(true)
     const [hideModal2, setHideModal2] = useState(true)
@@ -61,6 +63,19 @@ function UserTierTables(props) {
     },[props.tierSigned])
 
     useEffect(() => {
+        if(props.tier.uid) {
+            firestore.collection("users").doc(props.tier.uid).onSnapshot((snapshot) => {
+                setUserOfTierInfo([...userOfTierInfo, {
+                    userId: snapshot.id,
+                    displayName: snapshot.data().displayName,
+                    thumbnail: snapshot.data().thumbnail,
+                    point: snapshot.data().point,
+                }])
+            })
+        }
+    },[props.tier.uid])
+
+    useEffect(() => {
         if(tierUserSigned.length > 0){
             var someString = tierUserSigned[0].tier
             someString = someString.slice(4)
@@ -71,6 +86,15 @@ function UserTierTables(props) {
             setTierUserSignedNum(0)
         }
     },[tierUserSigned])
+
+    useEffect(() => {
+        if(userOfTierInfo.length > 0){
+            var someNumber = userOfTierInfo[0].point * 1
+            if(someNumber > 0 || someNumber == 0){
+                setChannelPoint(someNumber)
+            }
+        }
+    },[userOfTierInfo])
 
 
     const handleDelete = () =>{
@@ -230,7 +254,6 @@ function UserTierTables(props) {
         //firestore where (userSigned in currentuser.id) where(uid == props.tier.uid)
 
     }
-    
 
     const handleSignUp = () => {
         if(statSigned){
@@ -297,6 +320,9 @@ function UserTierTables(props) {
                 var pointThing = props.tier.cost*1
                 var currentUserPoint = userInfo[0].point
                 currentUserPoint = currentUserPoint - pointThing
+                var userOfTierPoint = channelPoint*1
+                userOfTierPoint = userOfTierPoint + pointThing
+                userOfTierPoint = userOfTierPoint.toString()
                 currentUserPoint = currentUserPoint.toString()
                 var someArray = props.tier.userSigned
                 if(!someArray) someArray = arraySigned
@@ -307,6 +333,10 @@ function UserTierTables(props) {
                     
                     firestore.collection("users").doc(userInfo[0].userId).set({
                         point: currentUserPoint,
+                    }, { merge: true }),
+
+                    firestore.collection("users").doc(props.tier.uid).set({
+                        point: userOfTierPoint,
                     }, { merge: true }),
 
                 )
