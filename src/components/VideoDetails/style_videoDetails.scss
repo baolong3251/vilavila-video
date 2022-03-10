@@ -1,6 +1,7 @@
 .videoDetails{
     padding: 10px;
     background-color: #f5f5f5;
+    position: relative;
 
     .videoDetails_top{
         display: flex;
@@ -130,6 +131,7 @@
             width: 31%;
             min-width: 150px;
             padding-left: 10px;
+
             
             .videoDetails_rightSide_info{
                 margin-right: 10px;
@@ -178,6 +180,11 @@
 
             }
 
+            .videoDetails_sideVideoCard{
+                border-top: 1px solid rgba(0, 0, 0, 0.1);
+                margin-top: 10px;
+            }
+
             .videoDetails_rightSide_videoCards{
                 padding: 5px;
                 display: flex;
@@ -191,6 +198,16 @@
                     margin: auto;
                     background-color: #eeebeb;
                     border-radius: 5px;
+
+                    .thing{
+                        .react-player{
+                            height: 94px;
+                            width: 168px;
+                            margin: 0;
+                            border-radius: 5px;
+                            overflow: hidden;
+                        }
+                    }
                     
                     img{
                         max-width: 168px;
@@ -199,6 +216,7 @@
                         margin: auto;
                         border-radius: 5px;
                     }
+
                 }
 
                 .videoDetails_rightSide_videoCardsInfo{
@@ -358,6 +376,144 @@
                 }
             }
         }
+    }
+
+
+    //THE POP UP THING WHEN CLICK LIKE OR SOMETHING
+    .popUpWhenLike{
+        position: fixed;
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        z-index: 5;
+        width: 100%;
+        left: 50%;
+        transform: translate(-50%, 0);
+        padding: 0;
+        bottom: -300px;
+        height: 290px;
+        box-shadow: 0 0 5px -1px rgb(170, 170, 170);
+        padding: 16px 0px;
+        overflow-y: scroll;
+        transition: 0.5s;
+        visibility: hidden;
+
+        .popUpWhenLike_title{
+            margin: auto;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .popUpWhenLike_turnOffIcon{
+            position: absolute;
+            top: 10px;
+            color: white;
+            right: 20px;
+            cursor: pointer;
+            transition: color 0.2s ease 0s;
+            .popUpWhenLike_icon{
+                font-size: 35px;
+            }
+        }
+
+        .popUpWhenLike_turnOffIcon:hover{
+            color: #e22590;
+        }
+
+        .popUpWhenLike_items{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+            
+            .popUpWhenLike_item{
+                background-color: rgb(245, 245, 245);
+                color: black;
+                height: 200px;
+                padding: 0px 0px;
+                align-items: center;
+                -webkit-box-align: center;
+                border-radius: 8px;
+                width: 408px;
+                position: relative;
+                //392px
+                margin-bottom: 10px;
+
+                .popUpWhenLike_item_top{
+                    display: flex;
+                    border-radius: 8px;
+
+                    .popUpWhenLike_item_topInner{
+                        cursor: pointer;
+                        .video-player-inner{
+                            width: 204px;
+                        
+                            .react-player-inner{
+                                width: 204px;
+                                border-radius: 8px;
+                                margin: 0;
+                                overflow: hidden;
+                            }
+
+                            img{
+                                max-width: 204px;;
+                                background-color: #f5f5f5;
+                                margin: auto;
+                                border-radius: 8px;
+                            }
+                        }
+
+                        .popUpWhenLike_item_topInnerInfo{
+                            overflow: hidden;
+                            white-space: nowrap;
+                            display: block;
+                            text-overflow: ellipsis;
+                            width: calc(90%);
+                            font-size: 15px;
+                        }
+                    }
+                }
+                .popUpWhenLike_item_bottom{
+                    height: 64px;
+                    position: absolute;
+                    width: 100%;
+                    bottom: 0;
+                    border-bottom-left-radius: 8px;
+                    border-bottom-right-radius: 8px;
+                    align-items: center;
+                    display: flex;
+                    justify-content: space-between;
+
+                    .popUpWhenLike_item_bottomChannel{
+                        display: flex;
+                        align-items: center;
+                        margin: 10px;
+
+                        .popUpWhenLike_item_bottomChannelText{
+                            margin-left: 10px;
+                        }
+                    }
+
+                    .popUpWhenLike_item_bottomButton{
+                        margin: 10px;
+
+                        button{
+                            color: white;
+                            background-color: #1abc9c;
+                            padding: 10px 5px;
+                            font-weight: 700;
+                            font-size: 11px;
+                            border-radius: 5px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .active{
+        visibility: visible;
+        bottom: 0px;
     }
 }
 

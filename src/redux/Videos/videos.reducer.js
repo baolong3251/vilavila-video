@@ -2,6 +2,7 @@ import videosTypes from "./videos.types";
 
 const INITIAL_STATE = {
     videos: [],
+    videosFollow: [],
     video: {},
 }
 
@@ -11,6 +12,11 @@ const videosReducer = (state=INITIAL_STATE, action) => {
             return {
                 ...state,
                 videos: action.payload
+            }
+        case videosTypes.SET_FOLLOWINGVIDEOS:
+            return {
+                ...state,
+                videosFollow: action.payload
             }
         case videosTypes.SET_VIDEO:
             return {

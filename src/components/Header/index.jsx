@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from "react-redux"
 import { signOutUserStart } from '../../redux/User/user.action'
-import { Link } from "react-router-dom"
+import { Link, useHistory } from "react-router-dom"
 import "./style_header.scss"
 
 import SearchIcon from '@material-ui/icons/Search';
@@ -20,6 +20,7 @@ function Header() {
     const dispatch = useDispatch();
     const { currentUser } = useSelector(mapState);
     const [inputSearch, setInputSearch] = useState("")
+    const history = useHistory()
     const [open, setOpen] = useState(false)
     const [open2, setOpen2] = useState(false)
     const [point, setPoint] = useState(0)
@@ -55,6 +56,12 @@ function Header() {
             }
         }
     }
+
+    const onKeyDownHandler = e => {
+        if (e.keyCode === 13 && inputSearch !== "") {
+            history.push(`/search/${inputSearch}`)
+        }
+    };
 
     const handleOnclick = () => {
         if(open2){
@@ -111,7 +118,8 @@ function Header() {
                     <input 
                         onChange={e => setInputSearch(e.target.value)} 
                         value={inputSearch} 
-                        placeholder='Tìm kiếm' 
+                        placeholder='Tìm kiếm'
+                        onKeyDown={onKeyDownHandler} 
                         className='search_bar' 
                     />
                     

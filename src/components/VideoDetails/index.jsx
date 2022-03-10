@@ -127,6 +127,7 @@ function VideoDetails() {
                         desc={desc}
                         date={createdDate}
                         tags={tags}
+                        category={category}
                     />
 
                     <Comment />
@@ -152,8 +153,6 @@ function VideoDetails() {
                             
                         </div>
                     </div>
-
-                    <hr></hr>
 
                     <SideVideoCard 
                         category={category}

@@ -27,7 +27,7 @@ function SideVideoCard({category, tags}) {
             //     ))
             // })
 
-            let ref = firestore.collection("videos").where("tier", "==", "")
+            let ref = firestore.collection("videos").where("tier", "==", "").where("privacy", "==", "public")
 
             if(tags) ref = ref.where("tags", "array-contains-any", tags)
             if(!tags) ref = ref.where("category", "==", category)
@@ -56,7 +56,7 @@ function SideVideoCard({category, tags}) {
     console.log(videos)
 
   return (
-    <div>
+    <div className='videoDetails_sideVideoCard'>
 
         {
             videos.map(video => {

@@ -15,6 +15,16 @@ export const setVideos = videos => ({
     payload: videos
 })
 
+export const fetchFollowingVideosStart = (filters={}) => ({
+    type: videosTypes.FETCH_FOLLOWINGVIDEOS_START,
+    payload: filters
+})
+
+export const setFollowingVideos = videosFollow => ({
+    type: videosTypes.SET_FOLLOWINGVIDEOS,
+    payload: videosFollow
+})
+
 export const deleteVideoStart = videoID => ({
     type: videosTypes.DELETE_VIDEO_START,
     payload: videoID

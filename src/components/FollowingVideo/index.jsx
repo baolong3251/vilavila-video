@@ -1,33 +1,36 @@
 import React, { useEffect, useState } from 'react'
 import "./style_following_video.scss"
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory, useParams } from "react-router-dom";
-import { fetchVideosStart } from '../../redux/Videos/videos.actions';
+import { Link, useHistory, useParams } from "react-router-dom";
+import { fetchFollowingVideosStart } from '../../redux/Videos/videos.actions';
 
 import VideoCard from '../VideoCard'
 import { firestore } from '../../firebase/utils';
 
 const mapState = ({videosData, user}) => ({
-    videos: videosData.videos,
+    videosFollow: videosData.videosFollow,
     currentUser: user.currentUser
 })
 
 function FollowingVideo() {
     const dispatch = useDispatch()
     const history = useHistory()
-    const { filterType } = useParams()
-    const { videos, currentUser } = useSelector(mapState)
+    const { videosFollow, currentUser } = useSelector(mapState)
     const [pageSize, setPageSize] = useState(8)
     const [currentUserId, setCurrentUserId] = useState([])
     const [userInfo, setUserInfo] = useState([])
+    const [something, setSomething] = useState()
 
-    const { data, queryDoc, isLastPage } = videos
+    const { data, queryDoc, isLastPage } = videosFollow
 
-    // useEffect(() => {
-    //     dispatch(
-    //         fetchVideosStart({filterType})
-    //     )
-    // }, [filterType])
+    useEffect(() => {
+        if(currentUser)
+        firestore.collection("users").where('follow', 'array-contains', currentUser.id).onSnapshot((snapshot) => {
+            setUserInfo(snapshot.docs.map(doc => ({
+                userId: doc.id,
+            })))
+        })
+    }, [])
 
     useEffect(() => {
         if(currentUser) {
@@ -40,11 +43,11 @@ function FollowingVideo() {
     },[currentUser])
 
     useEffect(() => {
-        if(userInfo.length > 0){
+        if(userInfo && userInfo.length > 0){
             var currentUserId = userInfo.map(a => a.userId);
             console.log(currentUserId)
             dispatch(
-                fetchVideosStart({currentUserId, pageSize})
+                fetchFollowingVideosStart({currentUserId, pageSize})
             )
             setCurrentUserId(currentUserId)
         }
@@ -52,7 +55,7 @@ function FollowingVideo() {
 
     const handleLoadMore = () => {
         dispatch(
-            fetchVideosStart({ 
+            fetchFollowingVideosStart({ 
                 currentUserId, 
                 startAfterDoc: queryDoc,
                 persistVideos: data 
@@ -81,7 +84,7 @@ function FollowingVideo() {
         <div className='container_video following-thing'>
             <div className='upper'>
                 <h2 className='label_video_type'>
-                    Kênh theo dõi
+                    Kênh theo dõi {<Link>Xem thêm</Link>}
                 </h2>
                 <div className='layout_video'>
 

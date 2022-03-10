@@ -14,3 +14,39 @@
         border-bottom: 1px solid lightgray;
     }
 }
+
+.horizontalVideo{
+    display: flex;
+    flex-wrap: wrap;
+    
+}
+
+.horizontalVideoCard{
+    margin-right: 0px;
+}
+
+.userVideos-videoCard:hover{
+    .userVideos-videoCard-edit-option{
+        display: flex!important;
+    }
+}
+
+@media only screen and (max-width: 1200px) {
+
+    .horizontalVideo{
+        justify-content: center;
+    }
+
+    .horizontalVideoCard{
+        margin-right: 10px;
+    }
+  
+}
+
+@media only screen and (max-width: 360px) {
+
+    .horizontalVideo{
+        justify-content: center;
+    }
+  
+}

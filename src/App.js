@@ -75,7 +75,16 @@ function App() {
           />
 
           {/* ====================SEARCH PAGE================== */}
-          <Route path="/search/:searchTerm"
+          
+          <Route exact path="/search"
+            render={() => (
+              <MainLayout >
+                <Search />
+              </MainLayout>
+            )}
+          />
+
+          <Route exact path="/search/:searchTerm"
             render={() => (
               <MainLayout >
                 <Search />

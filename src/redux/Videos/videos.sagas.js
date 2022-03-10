@@ -1,7 +1,7 @@
 import { auth } from "../../firebase/utils"
 import { takeLatest, put, all, call } from "redux-saga/effects"
-import { setVideos, setVideo, fetchVideosStart } from "./videos.actions"
-import { handleAddVideo, handleFetchVideos, handleFetchVideo, handleDeleteVideo } from "./videos.helpers"
+import { setVideos, setFollowingVideos, setVideo, fetchVideosStart } from "./videos.actions"
+import { handleAddVideo, handleFetchVideos, handleFetchFollowingVideos, handleFetchVideo, handleDeleteVideo } from "./videos.helpers"
 import videosTypes from "./videos.types"
 
 export function* addVideo({ payload }) {
@@ -39,6 +39,21 @@ export function* onFetchVideosStart() {
     yield takeLatest(videosTypes.FETCH_VIDEOS_START, fetchVideos)
 }
 
+export function* fetchFollowingVideos({ payload }) {
+    try {
+        const videosFollow = yield handleFetchFollowingVideos(payload); //get product from handle Fetch
+        yield put ( //change it into state or change state with it
+            setFollowingVideos(videosFollow)
+        )
+    } catch (err) {
+        // console.log(err)
+    }
+}
+
+export function* onFetchFollowingVideosStart() {
+    yield takeLatest(videosTypes.FETCH_FOLLOWINGVIDEOS_START, fetchFollowingVideos)
+}
+
 export function* deleteVideo({ payload }){
     try {
         yield handleDeleteVideo(payload)
@@ -73,6 +88,7 @@ export default function* videosSagas() {
     yield all([
         call(onAddVideoStart),
         call(onFetchVideosStart),
+        call(onFetchFollowingVideosStart),
         call(onDeleteVideoStart),
         call(onFetchVideoStart),
     ])

@@ -1,13 +1,12 @@
 import React from 'react'
 import AdCard from '../../AdCard'
-import Image from "../../../assets/TikTok-Banner.png"
 
-function AdOnTop() {
+function AdOnTop({Image, Link}) {
     return (
         <div>
             <AdCard 
                 image={Image}
-                link="https://www.tiktok.com/en/"
+                link={Link}
             />
         </div>
     )

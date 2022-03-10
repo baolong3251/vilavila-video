@@ -1,16 +1,44 @@
 .homepage{
     margin: auto;
     padding: 0;
-    width: 90%;
+    width: 95%!important;
 
     .container_video{
         flex: 0.8;
         background-color: #f9f9f9;
         padding: 40px 20px;
         padding-bottom: 0;
-        border-radius: 5px;
-        margin-bottom: 20px;
-        margin-top: 10px;
+        border-radius: 0px!important;
+        margin-bottom: 50px!important;
+        margin-top: 50px!important;
+        box-shadow: -1px 3px 3px -2px #54e2c6, 
+                    1px 3px 2px -1px rgba(0, 0, 0, 0.1px);
+
+                    // #4abfc7
+    }
+
+    .homepage_column{
+        display: flex;
+        width: 100%;
+        .homepage_columnTag {
+            flex: 1
+        }
+
+        .homepage_columnRanking{
+            h2{
+                color: white;
+            }
+            flex: 0.2;
+            
+            margin-left: 10px;
+            background-color: #333333;
+            padding: 40px 20px;
+            padding-bottom: 0;
+            color: white;
+            margin-bottom: 50px!important;
+            margin-top: 50px!important;
+            box-shadow: 4px 3px 0px #54e2c6;
+        }
     }
 
     // .container_video > h2 {
@@ -22,7 +50,7 @@
     // }
 
     .label_video_type{
-        margin-left: 5px;
+        margin-left: 0px!important;
         margin-bottom: 20px;
         font-weight: 700;
         text-transform: uppercase;
@@ -34,6 +62,15 @@
         flex-wrap: wrap;
         justify-content: center;
     }
+
+    h2{
+        a{
+            color: #808080;
+            font-size: 15px;
+            font-weight: 400;
+            text-transform: none;
+        }
+    }
 }
 
 // .following-thing{
@@ -41,6 +78,6 @@
 // }
 
 .upper{
-    width: 90%;
+    width: 99%;
     margin: auto;
 }

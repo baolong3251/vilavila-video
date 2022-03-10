@@ -37,8 +37,8 @@ function VideoCard(props) {
                     <ReactPlayer 
                         className="react-player"
                         url={props.video.sourceLink} 
-                        width="100%"
-                        height="100%"
+                        width="168px"
+                        height="94px"
                     />
                 </div>
                 }

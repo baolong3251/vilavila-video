@@ -15,13 +15,14 @@ import { useSelector } from 'react-redux';
 import AlertModal from '../../AlertModal';
 import Button from "../../Forms/Button"
 import { Link } from 'react-router-dom';
+import PopUpContainer from '../PopUpContainer';
 
 const mapState = state => ({
     currentUser: state.user.currentUser,
 })
 
 
-function Main({id, url, title, views, desc, date, tags}) {
+function Main({id, url, title, views, desc, date, tags, category}) {
     const { currentUser } = useSelector(mapState);
     const [like, setLike] = useState(false)
     const [likeArray, setLikeArray] = useState([])
@@ -29,6 +30,8 @@ function Main({id, url, title, views, desc, date, tags}) {
     const [save, setSave] = useState(false)
     const [hideModal, setHideModal] = useState(true)
     const [watched, setWatched] = useState(false)
+    const [showContainer, setShowContainer] = useState(false)
+    const [tagLog, setTagLog] = useState([])
 
     const toggleModal = () => setHideModal(!hideModal);
 
@@ -45,7 +48,7 @@ function Main({id, url, title, views, desc, date, tags}) {
         //         }])
         //     }) 
         // }
-        if (id && allInfo.length == 0) {
+        if (id) {
             const q = query(collection(firestore, "contentStatus"), where("contentId", "==", id));
             onSnapshot(q, (snapshot) => {
                 setAllInfo(snapshot.docs.map(doc => ({
@@ -58,19 +61,56 @@ function Main({id, url, title, views, desc, date, tags}) {
                 })))
             }) 
         }
-    }, [])
+        setShowContainer(false)
+    }, [id])
 
     useEffect(() => {
         if (id && allInfo.length > 0) {
             checkLike()
             checkSave()
         }
+        getTagLog()
     }, [currentUser])
 
     useEffect(() => {
         checkLike()
         checkSave()
+        
     }, [allInfo])
+
+    // ===============================THIS THING FOR UPDATE POINT FOR CONTENT BUT NOT USE YET
+    const handlePoint = () => {
+        var likeTotal = 0
+        var viewTotal = views * 10
+        if(allInfo.length > 0) {
+            likeTotal = likeArray.length * 100
+        }
+        var allTotal = 0
+        var today = new Date();
+        var nowTime = Number(today)
+        var oldTime = Number(date)
+        var minute = Math.round(Math.abs(nowTime - oldTime) / 60,2)
+        var hour = minute / 60
+        console.log(hour)
+        allTotal = (likeTotal + viewTotal) - (0.04167) * (likeTotal + viewTotal) * hour
+        console.log(allTotal)
+    }
+
+    //================================THIS THING GET ALL OF TAG USER CONTACT WITH
+    const getTagLog = () => {
+        if(currentUser){
+            firestore.collection("tagLog").where("uid", "==", currentUser.id).onSnapshot(
+                (snapshot) => {
+                    setTagLog(snapshot.docs.map(doc => ({
+                        tid: doc.id, 
+                        uid: doc.data().uid,  
+                        tag: doc.data().tag,
+                    })
+                    ))
+                }
+            )
+        }
+    }
 
     const checkLike = () => {
         if(currentUser){
@@ -121,6 +161,7 @@ function Main({id, url, title, views, desc, date, tags}) {
                     saved: "false",
                     reported: "false"
                 })
+                setShowContainer(true)
             }
 
             // if(found){
@@ -136,15 +177,19 @@ function Main({id, url, title, views, desc, date, tags}) {
 
             if(found){
                 const foundLiked = found.liked
-                if (foundLiked == "false")
-                firestore.collection('contentStatus').doc(found.infoId).set({
-                    liked: "true"
-                }, { merge: true })
+                if (foundLiked == "false") {
+                    firestore.collection('contentStatus').doc(found.infoId).set({
+                        liked: "true"
+                    }, { merge: true })
+                    setShowContainer(true)
+                }
                 
-                if (foundLiked == "true")
-                firestore.collection('contentStatus').doc(found.infoId).set({
-                    liked: "false"
-                }, { merge: true })
+                if (foundLiked == "true") {
+                    firestore.collection('contentStatus').doc(found.infoId).set({
+                        liked: "false"
+                    }, { merge: true })
+                    setShowContainer(false)
+                }
             }
         }
     }
@@ -242,9 +287,26 @@ function Main({id, url, title, views, desc, date, tags}) {
             var numView = views * 1
             numView = numView + 1
             var realNumView = numView.toString()
+            var tagArray = tagLog
+
             firestore.collection('videos').doc(id).set({
                 views: realNumView
             }, { merge: true })
+
+            if(tags.length > 0){
+                tags.map(tag => {
+
+                    var someArray = tagArray.find(element => element.tag == tag)
+
+                    if(!someArray){
+                        firestore.collection('tagLog').add({
+                            uid: currentUser.id, 
+                            tag: tag,
+                        })
+                    }
+                    
+                })
+            }
             setWatched(true)
         }
     }
@@ -300,6 +362,13 @@ function Main({id, url, title, views, desc, date, tags}) {
                 </div>
             </div>
         </div>
+
+        {currentUser ? <PopUpContainer 
+                            tags={tags} 
+                            category={category} 
+                            showContainer={showContainer}
+                        /> 
+                        : null}
 
         <div className='videoDetails_leftSide_tags'>
             {tags ?

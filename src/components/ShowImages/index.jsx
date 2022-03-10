@@ -67,7 +67,7 @@ function ShowImages() {
         <div className='container_video'>
             <div className='upper'>
                 <h2 className='label_video_type'>
-                    Một số hình ảnh
+                    Tất cả hình ảnh
                 </h2>
                 <div className='layout_video'>
 

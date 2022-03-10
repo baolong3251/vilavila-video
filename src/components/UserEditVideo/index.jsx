@@ -183,6 +183,17 @@ function UserEditVideo() {
         if(tierChoice) { 
             tier = tierChoice
         }
+        if(fileImageUrl !== "" && video[0].thumbnail !== ""){
+            firestore.collection('videos').doc(videoID).set({
+                title: newTitle,
+                desc: newDesc,
+                thumbnail: fileImageUrl,
+                tier: tier,
+                tags: tags,
+            }, { merge: true }).then(
+                handleDeleteThumbnail(video[0].thumbnail)
+            )
+        }
         if(fileImageUrl !== ""){
             firestore.collection('videos').doc(videoID).set({
                 title: newTitle,
@@ -191,7 +202,6 @@ function UserEditVideo() {
                 tier: tier,
                 tags: tags,
             }, { merge: true }).then(
-                handleDeleteThumbnail(fileImageUrl)
             )
         }
         if(fileImageUrl == ""){

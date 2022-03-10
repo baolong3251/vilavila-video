@@ -275,6 +275,7 @@ function UploadVideo() {
         e.preventDefault();
         var sourceLink = filevideoUrl
         var thumbnail = fileImageUrl
+        var titleForSearch = title.toLowerCase()
         if(vId == ''){
             alert("Không có video nào để xử lý")
             return
@@ -296,6 +297,7 @@ function UploadVideo() {
                 vId,
                 thumbnail,
                 tier,
+                titleForSearch,
             })
         )
         
