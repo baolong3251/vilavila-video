@@ -10,7 +10,9 @@ import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AddIcon from '@material-ui/icons/Add';
 import ImageIcon from '@material-ui/icons/Image';
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import { firestore } from '../../firebase/utils'
+import { checkUserIsAdmin } from '../../Utils'
 
 const mapState = (state) => ({ //this thing can happen if use redux
     currentUser: state.user.currentUser,
@@ -19,6 +21,7 @@ const mapState = (state) => ({ //this thing can happen if use redux
 function Header() {
     const dispatch = useDispatch();
     const { currentUser } = useSelector(mapState);
+    const isAdmin = checkUserIsAdmin(currentUser)
     const [inputSearch, setInputSearch] = useState("")
     const history = useHistory()
     const [open, setOpen] = useState(false)
@@ -33,12 +36,16 @@ function Header() {
     useEffect(() => {
         if(currentUser) {
             firestore.collection("users").doc(currentUser.id).onSnapshot((snapshot) => {
-                setUserInfo([...userInfo, {
-                    userId: snapshot.id,
-                    displayName: snapshot.data().displayName,
-                    thumbnail: snapshot.data().thumbnail,
-                    point: snapshot.data().point,
-                }])
+                try {
+                    setUserInfo([...userInfo, {
+                        userId: snapshot.id,
+                        displayName: snapshot.data().displayName,
+                        thumbnail: snapshot.data().thumbnail,
+                        point: snapshot.data().point,
+                    }])
+                } catch (error) {
+                    
+                }
             })
         }
     },[currentUser])
@@ -180,6 +187,13 @@ function Header() {
                                                 Điểm hiện tại: {new Intl.NumberFormat().format(point)} điểm
                                                 (+)
                                             </Link>
+                                            {isAdmin ? <Link to="/admin" className="dropdown_menuItem">
+                                                <div className='dropdown_menuItemIcon_Container'>
+                                                    <SupervisorAccountIcon className='dropdown_menuItemIcon' /> 
+                                                </div>
+                                                Trang Admin
+                                            </Link>
+                                            : null}
                                         </div>
                                     ]}
                                 </li>,

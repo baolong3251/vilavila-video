@@ -1,5 +1,4 @@
 import { firestore } from "../../firebase/utils";
-import { doc, updateDoc, deleteField } from "firebase/firestore";
 
 //create something in database(firebase)
 export const handleAddImage = image => {

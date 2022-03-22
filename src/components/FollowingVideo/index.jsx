@@ -15,6 +15,7 @@ const mapState = ({videosData, user}) => ({
 function FollowingVideo() {
     const dispatch = useDispatch()
     const history = useHistory()
+    const { filterType } = useParams()
     const { videosFollow, currentUser } = useSelector(mapState)
     const [pageSize, setPageSize] = useState(8)
     const [currentUserId, setCurrentUserId] = useState([])
@@ -23,14 +24,26 @@ function FollowingVideo() {
 
     const { data, queryDoc, isLastPage } = videosFollow
 
+    // useEffect(() => {
+    //     if(currentUser){
+    //         console.log("something1")
+    //         firestore.collection("users").where('follow', 'array-contains', currentUser.id).onSnapshot((snapshot) => {
+    //             setUserInfo(snapshot.docs.map(doc => ({
+    //                 userId: doc.id,
+    //             })))
+    //         })
+    //     }
+    // }, [])
+
     useEffect(() => {
-        if(currentUser)
-        firestore.collection("users").where('follow', 'array-contains', currentUser.id).onSnapshot((snapshot) => {
-            setUserInfo(snapshot.docs.map(doc => ({
-                userId: doc.id,
-            })))
-        })
-    }, [])
+        if(currentUser){
+            firestore.collection("users").where('follow', 'array-contains', currentUser.id).onSnapshot((snapshot) => {
+                setUserInfo(snapshot.docs.map(doc => ({
+                    userId: doc.id,
+                })))
+            })
+        }
+    }, [filterType])
 
     useEffect(() => {
         if(currentUser) {
@@ -84,11 +97,12 @@ function FollowingVideo() {
         <div className='container_video following-thing'>
             <div className='upper'>
                 <h2 className='label_video_type'>
-                    Kênh theo dõi {<Link>Xem thêm</Link>}
+                    Kênh theo dõi {userInfo.length !== 0 && [<Link>Xem thêm</Link>]}
                 </h2>
                 <div className='layout_video'>
 
-                    {data.map((video, pos) => {
+                    {userInfo.length !== 0 && [
+                    data.map((video, pos) => {
                         const { thumbnail, title, views, likes, privacy, sourceLink, desc, createdDate, videoAdminUID, documentID } = video
                         if ( !title || 
                             typeof views === 'undefined') return null
@@ -104,7 +118,7 @@ function FollowingVideo() {
                             />
                             
                         )
-                    })}
+                    })]}
                     
 
                 </div>

@@ -1,25 +1,26 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react'
-import { useSelector } from 'react-redux'
+// import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import HorizontalVideoCard from '../../components/HorizontalVideoCard'
 import { firestore } from '../../firebase/utils'
 
 import "./style_userVideos.scss"
 
-const mapState = ({ user }) => ({
-  currentUser: user.currentUser
-})
+// const mapState = ({ user }) => ({
+//   currentUser: user.currentUser
+// })
 
 function UserVideos() {
-  const {currentUser} = useSelector(mapState)
+  // const {currentUser} = useSelector(mapState)
   const { userID } = useParams()
   const [videos, setVideos] = useState([])
 
   useEffect(() => {
     
     firestore.collection("videos").where("videoAdminUID", "==", userID).onSnapshot((snapshot) => {
-      setVideos(snapshot.docs.map(doc => ({
+      try {
+        setVideos(snapshot.docs.map(doc => ({
           vid: doc.id, 
           title: doc.data().title,
           views: doc.data().views,
@@ -32,6 +33,9 @@ function UserVideos() {
           videoAdminUID: doc.data().videoAdminUID,
           tier: doc.data().tier,
         })))
+      } catch (error) {
+        
+      }
     })
    
   }, [userID])

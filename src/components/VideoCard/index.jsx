@@ -7,12 +7,14 @@ import { Link, useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import moment from 'moment'
 import 'moment/locale/vi';
+import VideoThumbnail from 'react-video-thumbnail';
 
 
 function VideoCard(video) {
     const [dataChannel, setDataChannel] = useState([])
     const dispatch = useDispatch()
     const history = useHistory()
+    const [thumb, setThumb] = useState("")
     const {
         title,
         views, 
@@ -35,12 +37,15 @@ function VideoCard(video) {
 
     const handleLoadThing = () => {
         firestore.collection('users').doc(videoAdminUID).onSnapshot(snapshot => {
-            
-            setDataChannel({
+            try {
+                setDataChannel({
                     id: snapshot.id, 
                     displayName: snapshot.data().displayName,
                     channelImage: snapshot.data().avatar,
-            })
+                })
+            } catch (error) {
+                
+            }
             
         })
     }
@@ -59,12 +64,27 @@ function VideoCard(video) {
                         <div className='thing-thing'>
                         
                         </div>
-                        <ReactPlayer 
+                        {/* <ReactPlayer 
                             className="react-player"
                             url={sourceLink} 
                             width="100%"
                             height="100%"
-                        /> 
+                        /> */}
+
+                        <div className="hideVideoThumbnail">
+                            <VideoThumbnail
+                                videoUrl={sourceLink} 
+                                thumbnailHandler={(thumbnail) => setThumb(thumbnail)}
+                                
+                                // snapshotAtTime={5}
+                                crossorigin
+                                
+                            /> 
+                        </div>
+                        
+
+                        <img src={thumb}  />
+
                     </div>
                 }
                 

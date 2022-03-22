@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
 import Button from "../../components/Forms/Button"
 import "./style_userTiers.scss"
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import FormModal from "../../components/FormModal"
 import FormInput from "../../components/Forms/FormInput"
 import FormSelect from "../../components/Forms/FormSelect"

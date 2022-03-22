@@ -5,18 +5,24 @@ import { firestore } from '../../firebase/utils'
 import moment from 'moment'
 import 'moment/locale/vi';
 import "./style_verticalVideoCard.scss"
+import VideoThumbnail from 'react-video-thumbnail'
 
 function VerticalVideoCard(props) {
     const [channel, setChannel] = useState([])
+    const [thumb, setThumb] = useState('')
 
     useEffect(() => {
         if (props.video.videoAdminUID && channel.length == 0) {
             firestore.collection("users").doc(props.video.videoAdminUID).onSnapshot((snapshot) => {
-                setChannel([...channel,{
-                    displayName: snapshot.data().displayName,
-                    avatar: snapshot.data().avatar,
-                    follow: snapshot.data().follow,
-                }])
+                try {
+                    setChannel([...channel,{
+                        displayName: snapshot.data().displayName,
+                        avatar: snapshot.data().avatar,
+                        follow: snapshot.data().follow,
+                    }])
+                } catch (error) {
+                    
+                }
             }) 
         }
     }, [props.video.videoAdminUID])
@@ -25,13 +31,20 @@ function VerticalVideoCard(props) {
         <div className='verticalVideoCard'>
             <Link className='verticalVideoCard_videoCardsThumbnail'>
                 {props.video.thumbnail ? <img className='videoCards_img' src={props.video.thumbnail} />
-                :
-                <ReactPlayer 
-                    className="react-player"
-                    url={props.video.sourceLink} 
-                    width="100%"
-                    height="100%"
-                />
+                :   <>
+                <div className='hideVideoThumbnail'>
+                    <VideoThumbnail
+                        videoUrl={props.video.sourceLink} 
+                        thumbnailHandler={(thumbnail) => setThumb(thumbnail)}
+                        // width={2000}
+                        // height={1100}
+                        // snapshotAtTime={5}
+                        crossorigin
+                    />
+                </div>
+
+                <img className='videoCards_img' src={thumb} />
+                </>
                 }
             </Link>
             <div className='verticalVideoCard_videoCardsInfo'>

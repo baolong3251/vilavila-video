@@ -11,7 +11,7 @@ export const handleResetPasswordAPI = (email) => {
                 resolve()
             })
             .catch(() => {
-                const err = ['Email not found. Please try again.'];
+                const err = ['Email không khả dụng, xin vui lòng thử lại.'];
                 reject(err)
             })
 

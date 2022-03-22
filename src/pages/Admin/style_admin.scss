@@ -1,0 +1,30 @@
+.admin{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    .admin_container{
+        background-color: #333333;
+        padding-bottom: 0;
+        color: white;
+        margin: 50px;
+        margin-bottom: 50px !important;
+        margin-top: 50px !important;
+        box-shadow: 4px 3px 0px #54e2c6;
+        width: 500px;
+        text-align: center;
+        padding: 10px;
+
+        h2{
+            color: white;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #54e2c6;
+        }
+
+        .containerForCat{
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+    }
+}

@@ -53,11 +53,15 @@ function VideoDetails() {
     useEffect(() => {
         if (videoAdminUID && channel.length == 0) {
             firestore.collection("users").doc(videoAdminUID).onSnapshot((snapshot) => {
-                setChannel([...channel,{
-                    displayName: snapshot.data().displayName,
-                    avatar: snapshot.data().avatar,
-                    follow: snapshot.data().follow,
-                }])
+                try {
+                    setChannel([...channel,{
+                        displayName: snapshot.data().displayName,
+                        avatar: snapshot.data().avatar,
+                        follow: snapshot.data().follow,
+                    }])
+                } catch (error) {
+                    
+                }
             }) 
         }
     }, [videoAdminUID])

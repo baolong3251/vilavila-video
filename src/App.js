@@ -6,6 +6,7 @@ import { checkUserSession } from "./redux/User/user.action";
 
 // HOC
 import WithAuth from "./hoc/withAuth"
+import WithAdminAuth from "./hoc/withAdminAuth"
 
 // PAGES
 
@@ -24,12 +25,19 @@ import UserLayout from "./layouts/UserLayout";
 import UserVideos from "./pages/UserVideos";
 import UserTiers from "./pages/UserTiers";
 import UserEditVideo from "./components/UserEditVideo";
+import UserEditImage from "./components/UserEditImage";
 import UserImages from "./pages/UserImages";
 import Point from "./pages/Point";
 import Image from "./pages/Image";
 import ImageLayout from "./layouts/ImageLayout";
 import Videos from "./pages/Videos";
 import Images from "./pages/Images";
+import AdminToolbar from "./components/AdminToolbar";
+import AdminLayout from "./layouts/AdminLayout";
+import Admin from "./pages/Admin";
+import AdminCategory from "./components/AdminCategory";
+import AdminReport from "./components/AdminReport";
+import AdminAccount from "./components/AdminAccount";
 
 
 function App() {
@@ -41,7 +49,7 @@ function App() {
 
   return (
     <div className="App">
-        
+        {/* <AdminToolbar /> */}
         <Switch>
           {/* ====================HOME PAGE================== */}
           <Route exact path="/" render={() => (
@@ -50,11 +58,11 @@ function App() {
             </HomepageLayout>
           )} />
 
-          {/* <Route exact path="/:filterType" render={() => (
+          <Route exact path=":filterType" render={() => (
             <HomepageLayout >
               <Homepage />
             </HomepageLayout>
-          )} /> */}
+          )} />
 
           {/* ====================SIGN IN PAGE================== */}
           <Route path="/login"
@@ -195,9 +203,20 @@ function App() {
 
           {/* ====================USER DETIALS EDIT VIDEO PAGE =================== */}
           <Route exact path="/user/:userID/edit/:videoID" render={() => ( ///:videoID
-            <UserLayout>
-              <UserEditVideo />
-            </UserLayout>
+            <WithAuth>
+              <UserLayout>
+                <UserEditVideo />
+              </UserLayout>
+            </WithAuth>
+          )}/>
+
+          {/* ====================USER DETIALS EDIT IMAGE PAGE =================== */}
+          <Route exact path="/user/:userID/editImage/:imageID" render={() => ( ///:videoID
+            <WithAuth>
+              <UserLayout>
+                <UserEditImage />
+              </UserLayout>
+            </WithAuth>
           )}/>
 
           {/* ====================USER DETIALS TIERS PAGE =================== */}
@@ -220,6 +239,39 @@ function App() {
               <Point />
             </MainLayout>
           )}/>
+
+          {/* =================== ADMIN PAGE ========================= */}
+          <Route exact path="/admin" render={() => (
+            <WithAdminAuth>
+              <AdminLayout>
+                <Admin />
+              </AdminLayout>
+            </WithAdminAuth>
+          )} />
+
+          <Route exact path="/admin/categorys" render={() => (
+            <WithAdminAuth>
+              <AdminLayout>
+                <AdminCategory />
+              </AdminLayout>
+            </WithAdminAuth>
+          )} />
+
+          <Route exact path="/admin/reports" render={() => (
+            <WithAdminAuth>
+              <AdminLayout>
+                <AdminReport />
+              </AdminLayout>
+            </WithAdminAuth>
+          )} />
+
+          <Route exact path="/admin/accounts" render={() => (
+            <WithAdminAuth>
+              <AdminLayout>
+                <AdminAccount />
+              </AdminLayout>
+            </WithAdminAuth>
+          )} />
 
         </Switch>
     </div>

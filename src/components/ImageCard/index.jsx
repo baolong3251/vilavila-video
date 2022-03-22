@@ -34,12 +34,15 @@ function ImageCard(image) {
 
     const handleLoadThing = () => {
         firestore.collection('users').doc(imageAdminUID).onSnapshot(snapshot => {
-            
-            setDataChannel({
+            try {
+                setDataChannel({
                     id: snapshot.id, 
                     displayName: snapshot.data().displayName,
                     channelImage: snapshot.data().avatar,
-            })
+                })
+            } catch (error) {
+                
+            }
             
         })
     }

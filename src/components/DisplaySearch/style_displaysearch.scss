@@ -13,16 +13,16 @@
         text-transform: uppercase;
         border-bottom: 1px solid lightgray;
     }
-}
 
-.horizontalVideo{
-    display: flex;
-    flex-wrap: wrap;
+    .horizontalVideo{
+        display: flex;
+        flex-wrap: wrap;
+        
+    }
     
-}
-
-.horizontalVideoCard{
-    margin-right: 0px;
+    .horizontalVideoCard{
+        margin-right: 0px;
+    }
 }
 
 .userVideos-videoCard:hover{

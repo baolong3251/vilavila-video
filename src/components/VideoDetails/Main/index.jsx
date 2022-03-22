@@ -51,14 +51,18 @@ function Main({id, url, title, views, desc, date, tags, category}) {
         if (id) {
             const q = query(collection(firestore, "contentStatus"), where("contentId", "==", id));
             onSnapshot(q, (snapshot) => {
-                setAllInfo(snapshot.docs.map(doc => ({
-                    infoId: doc.id, 
-                    contentId: doc.data().contentId, 
-                    userId: doc.data().userId, 
-                    liked: doc.data().liked,
-                    saved: doc.data().saved,
-                    reported: doc.data().reported
-                })))
+                try {
+                    setAllInfo(snapshot.docs.map(doc => ({
+                        infoId: doc.id, 
+                        contentId: doc.data().contentId, 
+                        userId: doc.data().userId, 
+                        liked: doc.data().liked,
+                        saved: doc.data().saved,
+                        reported: doc.data().reported
+                    })))
+                } catch (error) {
+                    
+                }
             }) 
         }
         setShowContainer(false)
@@ -293,7 +297,7 @@ function Main({id, url, title, views, desc, date, tags, category}) {
                 views: realNumView
             }, { merge: true })
 
-            if(tags.length > 0){
+            if(tags.length > 0 && currentUser){
                 tags.map(tag => {
 
                     var someArray = tagArray.find(element => element.tag == tag)
@@ -322,6 +326,7 @@ function Main({id, url, title, views, desc, date, tags, category}) {
                 width="100%"
                 height="100%"
                 onProgress={handleWatching}
+                crossorigin
                 config={{ file: { 
                     attributes: {
                         controlsList: 'nodownload'

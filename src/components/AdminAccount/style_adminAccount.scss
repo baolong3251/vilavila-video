@@ -1,0 +1,86 @@
+.adminAccount{
+    .adminAccount_displayTopButton{
+        display: flex;
+        
+        button{
+            margin: 10px;
+            margin-left: 0;
+            width: 25%;
+        }
+    }
+
+    .adminAccount_displaySearchData{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        
+        .adminAccount_infoContainer{
+            display: flex;
+            align-items: center;
+
+            .adminAccount_infoContainer_displayName{
+                margin-left: 10px;
+            }
+        }
+
+        .adminAccount_buttonContainer{
+            display: flex;
+
+            button{
+                width: 100%;
+                text-transform: none;
+                margin: 10px;
+                font-size: 15px;
+
+                a{
+                    color: white;
+                }
+            }
+            
+        }
+    }
+
+    .tableShow{
+        position: fixed;
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        z-index: 5;
+        width: 40%;
+        
+        
+        padding: 10px;
+        right: -1000px;
+        top: 200px;
+        
+        box-shadow: 0 0 5px -1px rgb(170, 170, 170);
+        padding: 16px 0px;
+        transition: 0.5s;
+        visibility: hidden;
+        
+        h2{
+            color: white;
+            padding: 10px;
+            border-bottom: 2px solid #5bccb5;
+        }
+
+        p{
+            text-align: left;
+            padding: 5px
+        }
+
+        .button_flex{
+            display: flex;
+            justify-content: center;
+            button{
+                width: 30%;
+                margin: 10px;
+            }
+        }
+    }
+
+    .active{
+        visibility: visible;
+        right: 35px;
+    }
+}

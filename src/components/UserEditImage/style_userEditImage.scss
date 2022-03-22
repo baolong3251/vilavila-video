@@ -1,0 +1,106 @@
+.userImages-imageCard-editThumbnail-container{
+    .userImages-imageCard-editThumbnail-subContainer{
+        display: flex;
+        flex-wrap: wrap;
+        .thumbnailPreview{
+            width: 250px;
+            height: 150px;
+            margin-bottom: 10px;
+            margin-right: 10px;
+            position: relative;
+            background-color: lightgray;
+
+            img{
+                max-width: 100%;
+                height: 100%;
+                margin: auto;
+                display: flex;
+                justify-content: center;
+                border-radius: 5px;
+            }
+
+            span{
+                position: absolute;
+                display: block;
+                color: white;
+                top: 0;
+                right: 5px;
+                font-size: 20px;
+                padding: 5px;
+                background-color: #1abc9c;
+                border-bottom-left-radius: 3px;
+                border-bottom-right-radius: 3px;
+                cursor: pointer;
+            }
+
+        }
+    }
+}
+
+.userImages-imageCard-container{
+    margin-bottom: 10px;
+}
+
+.userImages-imageCard-radioBoxContainer{
+    label{
+        font-size: 1.8rem;
+        margin-top: 15px;
+    }
+    span{
+        font-size: 16px!important;
+    }
+
+    .userImages-imageCard-radioBox{
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        color: #34495e;
+
+        .MuiRadio-colorSecondary.Mui-checked {
+            color: #1abc9c;
+        }
+
+        .MuiRadio-root {
+            font-size: 80px;
+        }
+
+        .MuiSvgIcon-root {
+            fill: currentColor;
+            width: 1em;
+            height: 1em;
+            display: inline-block;
+            font-size: 2rem;
+            transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+            flex-shrink: 0;
+            user-select: none;
+        }
+    }
+}
+
+.showTags{
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    color: #808080;
+    font-size: 15px;
+
+    span{
+        margin-right: 8px;
+        padding: 5px;
+        position: relative;
+    }
+
+    .tag{
+        border-radius: 5px;
+        background-color: aquamarine;
+    }
+
+    .del-tag{
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        color: red;
+        cursor: pointer;
+        font-weight: 700;
+    }
+}

@@ -37,6 +37,7 @@ function UploadVideo() {
     const [title, setTitle] = useState("")
     const [desc, setDesc] = useState("")
     const [category, setCategory] = React.useState('animation');
+    const [categoryArray, setCategoryArray] = useState([])
     const [tempTag, setTempTag] = useState('')
     const [tags, setTags] = useState([])
     const [privacy, setPrivacy] = React.useState('private');
@@ -52,6 +53,18 @@ function UploadVideo() {
     const [progressThumbnail, setProgressThumbnail] = useState(0);
     const [filevideoUrl, setFilevideoUrl] = useState('')
     const [fileImageUrl, setFileImageUrl] = useState('')
+
+    //USE EFFECT FOR GET CATEGORY FROM FIREBASE------------------
+
+    useEffect(() => {
+        firestore.collection("category").orderBy("name").onSnapshot(snapshot => {
+            setCategoryArray(snapshot.docs.map(doc => ({
+              id: doc.id, 
+              name: doc.data().name,
+              quantity: doc.data().quantity,
+            })))
+          })
+    }, [])
 
     //USE EFFECT FOR ADD LINK VIDEO INTO FIRESTORE---------------
 
@@ -267,6 +280,24 @@ function UploadVideo() {
         }
     }
 
+    const handlePlusCat = () => {
+        var someArray = categoryArray
+        someArray = someArray.find(element => element.name == category)
+
+        var number = someArray.quantity * 1
+        var realNumber = number + 1
+        realNumber = realNumber.toString()
+
+        var cat = firestore.collection('category').where('name', '==', someArray.name)
+        cat.get().then(function(querySnapshot) {
+            querySnapshot.forEach(function(doc) {
+                doc.ref.set({
+                    quantity: realNumber,
+                }, { merge: true });
+            });
+        })      
+    }
+
     console.log(filevideoUrl)
     console.log(vId)
 
@@ -284,6 +315,7 @@ function UploadVideo() {
             alert("Tựa video của bạn???")
             return
         }
+        handlePlusCat()
         dispatch(
             addVideoStart({
                 category,
@@ -391,9 +423,11 @@ function UploadVideo() {
                     <FormControl className='uploadVideo_radioBoxContainer' component="fieldset">
                         <label>Thể loại</label>
                         <RadioGroup className='uploadVideo_radioBox' aria-label="gender" name="gender1" value={category} onChange={handleChangeCategory}>
-                            <FormControlLabel value="animation" control={<Radio />} label="Animation" />
-                            <FormControlLabel value="music" control={<Radio />} label="Nhạc" />
-                            <FormControlLabel value="other" control={<Radio />} label="Khác" />
+                            {categoryArray.map(cat => {
+                                return(
+                                    <FormControlLabel value={cat.name} control={<Radio />} label={cat.name} />
+                                )
+                            })}
                         </RadioGroup>
                     </FormControl>
                 </div>

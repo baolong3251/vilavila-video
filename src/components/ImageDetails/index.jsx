@@ -51,11 +51,15 @@ function ImageDetails() {
     useEffect(() => {
         if (imageAdminUID && channel.length == 0) {
             firestore.collection("users").doc(imageAdminUID).onSnapshot((snapshot) => {
-                setChannel([...channel,{
-                    displayName: snapshot.data().displayName,
-                    avatar: snapshot.data().avatar,
-                    follow: snapshot.data().follow,
-                }])
+                try {
+                    setChannel([...channel,{
+                        displayName: snapshot.data().displayName,
+                        avatar: snapshot.data().avatar,
+                        follow: snapshot.data().follow,
+                    }])
+                } catch (error) {
+                    
+                }
             }) 
         }
     }, [imageAdminUID])

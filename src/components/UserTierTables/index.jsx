@@ -99,8 +99,16 @@ function UserTierTables(props) {
 
     const handleDelete = () =>{
         var video = firestore.collection('videos').where('tier', '==', props.tier.tier).where('videoAdminUID', '==', props.tier.uid);
-        var image = firestore.collection('images').where('tier', '==', props.tier.tier);
+        var image = firestore.collection('images').where('tier', '==', props.tier.tier).where('imageAdminUID', '==', props.tier.uid);
         video.get().then(function(querySnapshot) {
+            querySnapshot.forEach(function(doc) {
+                doc.ref.set({
+                    tier: "",
+                }, { merge: true });
+            });
+        })
+
+        image.get().then(function(querySnapshot) {
             querySnapshot.forEach(function(doc) {
                 doc.ref.set({
                     tier: "",

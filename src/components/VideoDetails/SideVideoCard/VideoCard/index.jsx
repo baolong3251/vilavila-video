@@ -11,6 +11,7 @@ import { firestore } from '../../../../firebase/utils';
 
 function VideoCard(props) {
     const [channel, setChannel] = useState([])
+    const [thumb, setThumb] = useState('')
 
     useEffect(() => {
         if (props.video.videoAdminUID && channel.length == 0) {
@@ -34,12 +35,25 @@ function VideoCard(props) {
                     <div className='thing-thing'>
                     
                     </div>
-                    <ReactPlayer 
+                    {/* <ReactPlayer 
                         className="react-player"
                         url={props.video.sourceLink} 
                         width="168px"
                         height="94px"
-                    />
+                    /> */}
+                    <div className='hideVideoThumbnail'>
+                        <VideoThumbnail
+                            videoUrl={props.video.sourceLink} 
+                            thumbnailHandler={(thumbnail) => setThumb(thumbnail)}
+                            // width={2000}
+                            // height={1100}
+                            // snapshotAtTime={5}
+                            crossorigin
+                        />
+                    </div>
+
+                    <img className='videoCards_img' src={thumb} />
+                    
                 </div>
                 }
             </Link>

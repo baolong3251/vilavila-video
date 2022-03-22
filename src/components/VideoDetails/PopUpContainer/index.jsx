@@ -7,6 +7,7 @@ import {collection, query, doc, onSnapshot, where} from "firebase/firestore"
 import { firestore } from '../../../firebase/utils';
 import { useSelector } from 'react-redux';
 import CloseIcon from '@material-ui/icons/Close';
+import VideoThumbnail from 'react-video-thumbnail';
 
 const mapState = state => ({
     currentUser: state.user.currentUser,
@@ -19,6 +20,7 @@ function PopUpContainer({tags, category, showContainer}) {
     const [userDetailArray, setUserDetailArray] = useState([])
     const [contentArray, setContentArray] = useState([])
     const [showStat, setShowStat] = useState(showContainer)
+    const [thumb, setThumb] = useState('')
 
     useEffect(() => {
         // this thing will data from firestore
@@ -188,8 +190,8 @@ function PopUpContainer({tags, category, showContainer}) {
                                         return(
                                             <div className='popUpWhenLike_item_topInner'>
                                                 <div className="video-player-inner">
-                                                    {!arr.thumbnail ? 
-                                                    <ReactPlayer 
+                                                    {!arr.thumbnail ? <>
+                                                    {/* <ReactPlayer 
                                                         className="react-player-inner"
                                                         url={arr.sourceLink} 
                                                         controls = {false}
@@ -199,7 +201,21 @@ function PopUpContainer({tags, category, showContainer}) {
                                                             attributes: {
                                                                 controlsList: 'nodownload'
                                                         }}}} 
-                                                    /> : <img src={arr.thumbnail} />
+                                                    />  */}
+
+                                                    <div className='hideVideoThumbnail'>
+                                                        <VideoThumbnail
+                                                            videoUrl={arr.sourceLink} 
+                                                            thumbnailHandler={(thumbnail) => setThumb(thumbnail)}
+                                                            // width={2000}
+                                                            // height={1100}
+                                                            // snapshotAtTime={5}
+                                                            crossorigin
+                                                        />
+                                                    </div>
+
+                                                    <img src={thumb} />
+                                                    </> : <img src={arr.thumbnail} />
                                                     }
                                                 </div>
                                                 <div className='popUpWhenLike_item_topInnerInfo'>

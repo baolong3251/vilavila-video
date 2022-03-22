@@ -18,7 +18,10 @@ const VerticalNav = ({ children }) => {
 
     return (
         <div className="verticalNav">
+            {userID ? 
             <UserProfile {...configUserProfile} />
+            : null
+            }
 
             <div className="menu">
                 {children}

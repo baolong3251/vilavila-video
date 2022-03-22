@@ -24,7 +24,7 @@ function HorizontalVideoCard(props) {
     const [hideModal, setHideModal] = useState(true)
     const toggleModal = () => setHideModal(!hideModal);
     const [tiers, setTiers] = useState()
-    const [thumbnail, setThumbnail] = useState('')
+    const [thumb, setThumb] = useState('')
 
     const configModal = {
         hideModal,
@@ -34,11 +34,15 @@ function HorizontalVideoCard(props) {
     useEffect(() => {
         if (props.video.videoAdminUID && channel.length == 0) {
             firestore.collection("users").doc(props.video.videoAdminUID).onSnapshot((snapshot) => {
-                setChannel([...channel,{
-                    displayName: snapshot.data().displayName,
-                    avatar: snapshot.data().avatar,
-                    follow: snapshot.data().follow,
-                }])
+                try {
+                    setChannel([...channel,{
+                        displayName: snapshot.data().displayName,
+                        avatar: snapshot.data().avatar,
+                        follow: snapshot.data().follow,
+                    }])
+                } catch (error) {
+                    
+                }
             }) 
         }
     }, [props.video.videoAdminUID])
@@ -65,37 +69,37 @@ function HorizontalVideoCard(props) {
     //     changeIntoThumb()
     // }, [props.video.sourceLink])
 
-    async function getThumbnailForVideo(videoUrl) {
-        const video = document.createElement("video");
-        const canvas = document.createElement("canvas");
-        video.style.display = "none";
-        canvas.style.display = "none";
+    // async function getThumbnailForVideo(videoUrl) {
+    //     const video = document.createElement("video");
+    //     const canvas = document.createElement("canvas");
+    //     video.style.display = "none";
+    //     canvas.style.display = "none";
       
-        // Trigger video load
-        await new Promise((resolve, reject) => {
-          video.addEventListener("loadedmetadata", () => {
-            video.width = video.videoWidth;
-            video.height = video.videoHeight;
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            // Seek the video to 25%
-            video.currentTime = video.duration * 0.25;
-          });
-          video.addEventListener("seeked", () => resolve());
+    //     // Trigger video load
+    //     await new Promise((resolve, reject) => {
+    //       video.addEventListener("loadedmetadata", () => {
+    //         video.width = video.videoWidth;
+    //         video.height = video.videoHeight;
+    //         canvas.width = video.videoWidth;
+    //         canvas.height = video.videoHeight;
+    //         // Seek the video to 25%
+    //         video.currentTime = video.duration * 0.25;
+    //       });
+    //       video.addEventListener("seeked", () => resolve());
           
-          video.src = videoUrl;
-        });
+    //       video.src = videoUrl;
+    //     });
 
-        console.log(videoUrl)
+    //     console.log(videoUrl)
       
-        // Draw the thumbnailz
-        canvas
-          .getContext("2d")
-          .drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-        const imageUrl = canvas.toDataURL('image/png');
-        console.log(imageUrl)
-        return imageUrl;
-      }
+    //     // Draw the thumbnailz
+    //     canvas
+    //       .getContext("2d")
+    //       .drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+    //     const imageUrl = canvas.toDataURL('image/png');
+    //     console.log(imageUrl)
+    //     return imageUrl;
+    //   }
       
       // Set up application
     //  const img = document.querySelector("#img-thumb");
@@ -108,11 +112,11 @@ function HorizontalVideoCard(props) {
     //     img.src = thumbUrl;
     //   });
 
-      const changeIntoThumb = async () => {
-        const fileUrl = props.video.sourceLink;
-        const thumbUrl = await getThumbnailForVideo(fileUrl);
-        setThumbnail(thumbUrl);
-      }
+    //   const changeIntoThumb = async () => {
+    //     const fileUrl = props.video.sourceLink;
+    //     const thumbUrl = await getThumbnailForVideo(fileUrl);
+    //     setThumb(thumbUrl);
+    //   }
 
     //=========================================THE DELETING THING
 
@@ -192,13 +196,28 @@ function HorizontalVideoCard(props) {
                     <div className='thing-thing'>
                     
                     </div>
-                <ReactPlayer 
+                {/* <ReactPlayer 
                     className="react-player"
                     url={props.video.sourceLink} 
                     width="100%"
                     height="100%"
-                />
+                /> */}
+
+                {/* <img className='videoCards_img' src={thumbnail} crossorigin/> */}
                 
+                <div className='hideVideoThumbnail'>
+                    <VideoThumbnail
+                        videoUrl={props.video.sourceLink} 
+                        thumbnailHandler={(thumbnail) => setThumb(thumbnail)}
+                        // width={2000}
+                        // height={1100}
+                        // snapshotAtTime={5}
+                        crossorigin
+                    />
+                </div>
+
+                <img className='videoCards_img' src={thumb} />
+
                 </div>
                 }
             </Link>

@@ -136,6 +136,10 @@ a, a:hover {
   border-radius: 5px;
 }
 
+.hideVideoThumbnail{
+  display: none;
+}
+
 @media only screen and (max-width: 980px) {
   html {
     font-size: 8px; 
