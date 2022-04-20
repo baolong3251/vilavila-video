@@ -29,7 +29,7 @@ export function* getSnapshotFromUserAuth(user, additionalData={}) {
 export function* emailSignIn({ payload: { email, password } }) {
 
     if (email === '' || password === ''){
-        const userErr4 = ['Plz fill all the field'];
+        const userErr4 = ['Không được để trống khung thông tin'];
         yield put(
             userError(userErr4)
         )
@@ -48,7 +48,7 @@ export function* emailSignIn({ payload: { email, password } }) {
 
     } catch (err) {
         //console.log(err)
-        const userErr3 = ['Email not exist or wrong password...'];
+        const userErr3 = ['Email không tồn tại hoặc mật khẩu không đúng...'];
         yield put(
             userError(userErr3)
         )
@@ -99,7 +99,7 @@ export function* signUpUser( { payload: {
 } }) { //this is generation function
 
     if (password !== confirmPassword) {
-        const err = ['Password Don\'t match'];
+        const err = ['Mật khẩu không khớp'];
         yield put(
             userError(err)
         )
@@ -107,7 +107,7 @@ export function* signUpUser( { payload: {
     }
 
     if (displayName === '' || email === ''){
-        const userErr = ['Plz fill all the field'];
+        const userErr = ['Không được để trống khung thông tin'];
         yield put(
             userError(userErr)
         )
@@ -115,7 +115,7 @@ export function* signUpUser( { payload: {
     }
 
     if (password.length < 6 ){
-        const userErr2 = ['Password should be at least 6 characters '];
+        const userErr2 = ['Mật khẩu khẩu phải trên 6 ký tự'];
         yield put(
             userError(userErr2)
         )
@@ -131,7 +131,7 @@ export function* signUpUser( { payload: {
 
     } catch (err) {
         // console.log(err)
-        const errtwo = ['The email has been already sign up...'];
+        const errtwo = ['Email này đã được đăng ký trước đó rồi...'];
         yield put(
             userError(errtwo)
         )

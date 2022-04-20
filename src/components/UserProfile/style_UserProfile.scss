@@ -16,8 +16,12 @@
   
         .img {
           display: block;
-          width: 5.0rem;
-          margin: 0 auto;
+          width: 100%;
+          margin: auto;
+
+          .img-avatar{
+            margin: auto;
+          }
   
           img {
             display: block;
@@ -33,7 +37,153 @@
           font-size: 1.8rem;
           line-height: 1;
           text-transform: uppercase;
+          font-weight: 700;
+        }
+
+        .displayEdit{
+          display: block;
+          text-align: center;
+          margin: auto;
+          font-size: 1.6rem;
+          color: white;
+          font-weight: 700;
+
+          .displayEdit-container{
+            background-color: #1abc9c;
+            margin: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            border-radius: 4px;
+            .displayEdit-icon{
+              
+              font-size: 18px;
+              border-radius: 3px;
+              
+              
+            }
+          }
+        }
+
+        .follow{
+          display: block;
+          margin: auto;
+          text-align: center;
+          margin-top: 10px;
+          font-size: 15px;
+          color: #808080;
+
+          .followButton{
+            color: white;
+            background-color: #1abc9c;
+            border-radius: 3px;
+            padding: 4px;
+            font-size: 12px;
+            text-transform: uppercase;
+            cursor: pointer;
+            user-select: none;
+          }
+        }
+
+        .tableShow{
+          position: fixed;
+          background-color: rgba(0, 0, 0, 0.8);
+          color: white;
+          z-index: 5;
+          width: 40%;
+          
+          
+          padding: 10px;
+          left: -1000px;
+          top: 50px;
+          
+          box-shadow: 0 0 5px -1px rgb(170, 170, 170);
+          padding: 16px 0px;
+          transition: 0.5s;
+          visibility: hidden;
+          
+          h2{
+              color: white;
+              padding: 10px;
+              border-bottom: 2px solid #5bccb5;
+          }
+
+          label{
+            margin-left: 5px;
+          }
+
+          input{
+            width: 98%;
+            
+          }
+  
+          p{
+              text-align: left;
+              padding: 5px
+          }
+  
+          .button_flex{
+              display: flex;
+              justify-content: center;
+              button{
+                  width: 30%;
+                  margin: 10px;
+              }
+          }
+        }
+    
+        .active{
+            visibility: visible;
+            left: 35px;
         }
       }
     }
+
+    .userProfile-editAvatar-container{
+      .avatarPreview{
+          display: block;
+          width: 90px;
+          margin: auto;
+          position: relative;
+
+          .avatarPreview-avatar{
+            margin: auto;
+            width: 80px!important;
+            height: 80px!important;
+          }
+  
+          img{
+              max-width: 100%;
+              height: 100%;
+              margin: auto;
+              display: flex;
+              justify-content: center;
+              border-radius: 5px;
+          }
+  
+          span{
+              position: absolute;
+              display: block;
+              color: white;
+              top: 0;
+              right: 5px;
+              font-size: 20px;
+              padding: 5px;
+              background-color: #1abc9c;
+              border-bottom-left-radius: 3px;
+              border-bottom-right-radius: 3px;
+              cursor: pointer;
+          }
+  
+      }
+    }
+}
+
+@media only screen and (max-width: 580px) {
+  .tableShow{
+    width: 80%!important;
   }
+}

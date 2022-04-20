@@ -25,6 +25,7 @@ function HorizontalVideoCard(props) {
     const toggleModal = () => setHideModal(!hideModal);
     const [tiers, setTiers] = useState()
     const [thumb, setThumb] = useState('')
+    // const timestamp = new Date();
 
     const configModal = {
         hideModal,
@@ -245,7 +246,7 @@ function HorizontalVideoCard(props) {
                         {new Intl.NumberFormat('vi-VN', {
                         notation: "compact",
                         compactDisplay: "short"
-                        }).format(props.video.views)} lượt xem • {moment(props.video.createdDate.toDate()).locale('vi').fromNow()}
+                        }).format(props.video.views ? props.video.views : 0)} lượt xem • {props.video.createdDate ? moment(props.video.createdDate.toDate()).locale('vi').fromNow() : null}
                     </p>
                 </div>
             </div>

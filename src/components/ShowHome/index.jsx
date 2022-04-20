@@ -5,6 +5,12 @@ import ImagesForHomePage from '../ImagesForHomePage'
 import "./style_showhome.scss"
 import Image from "../../assets/TikTok-Banner.png"
 import { useSelector } from 'react-redux'
+import RankingTable from './RankingTable'
+import AnimationVideo from '../CategoryGroup/AnimationVideo'
+import RandomVideo from './RandomVideo'
+import HandleCheckTierLog from './HandleCheckTierLog'
+import ShowMoreVideos from './ShowMoreVideos'
+import HandleCheckAbility from './HandleCheckAbility'
 
 const mapState = ({user}) => ({
     currentUser: user.currentUser
@@ -25,44 +31,28 @@ function ShowHome() {
                 Link="https://www.tiktok.com/en/"
             />
 
-            <div className='container_video'>
-                random job
-            </div>
+            <RandomVideo />
 
-            <div className='homepage_column'>
-                <div className='homepage_columnTag'>
-                    <FollowingVideo />
-                </div>
-                <div className='homepage_columnRanking'>
-                    <h2 className='label_video_type'>Top trending</h2>
-                    <div>
-                        Top 1: something
-                    </div>
-                    <div>
-                        Top 1: something
-                    </div>
-                    <div>
-                        Top 1: something
-                    </div>
-                </div>
-            </div>
+            <ShowMoreVideos />
 
-            <FollowingVideo />
-            <FollowingVideo />
+            <RankingTable />
+            
+            <AdOnTop 
+                Image={Image}
+                Link="https://www.tiktok.com/en/"
+            />
 
             <ImagesForHomePage />
 
-            <div className='container_video'>
-                music
-            </div>
+            <AnimationVideo />
 
-            <div className='container_video'>
-                animation
-            </div>
+            {currentUser && [
+                <HandleCheckTierLog />
+            ]}
 
-            <div className='container_video'>
-                meme
-            </div>
+            {currentUser && [
+                <HandleCheckAbility />
+            ]}
 
         </div>
     )

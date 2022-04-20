@@ -18,7 +18,7 @@ function UserImages() {
 
   useEffect(() => {
     
-    firestore.collection("images").where("imageAdminUID", "==", userID).onSnapshot((snapshot) => {
+    firestore.collection("images").where("imageAdminUID", "==", userID).where("privacy", "==", "public").onSnapshot((snapshot) => {
       try {
         setImages(snapshot.docs.map(doc => ({
           id: doc.id, 
@@ -42,7 +42,7 @@ function UserImages() {
       {
         images.map(image => {
           return(
-            <div key={image.vid}>
+            <div key={image.id}>
               <HorizontalImageCard image={image} />
             </div>
           )

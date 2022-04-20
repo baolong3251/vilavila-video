@@ -34,6 +34,21 @@ const AdminLayout = props => {
                                     Quản lý tài khoản
                                 </Link>
                             </li>
+                            {/* <li>
+                                <Link to="/admin/exchanges">
+                                    Quản lý quy đổi
+                                </Link>
+                            </li> */}
+                            <li>
+                                <Link to="/admin/reportLog">
+                                    Báo cáo đã xử lý
+                                </Link>
+                            </li>
+                            <li>
+                                <Link to="/admin/accountLog">
+                                    Tài khoản đã xử lý
+                                </Link>
+                            </li>
                         </ul>
                     </VerticalNav>
                     

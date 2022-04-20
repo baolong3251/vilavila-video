@@ -9,15 +9,15 @@ const mapState = state => ({
     currentUser: state.user.currentUser,
 })
 
-function SideImageCard() {
+function SideImageCard(props) {
     const { currentUser } = useSelector(mapState);
     const [images, setImages] = useState([])
     const { imageID } = useParams()
 
     useEffect(() => {
-        if(currentUser){
+        if(props.imageAdminId){
 
-            let ref = firestore.collection("images").where("imageAdminUID", "==", currentUser.id).where("privacy", "==", "public").orderBy("createdDate", "desc")
+            let ref = firestore.collection("images").where("imageAdminUID", "==", props.imageAdminId).where("privacy", "==", "public").orderBy("createdDate", "desc")
             
             ref.get().then(
                 (snapshot) => {
@@ -34,7 +34,7 @@ function SideImageCard() {
                 }
             )
         }
-    }, [currentUser])
+    }, [props.imageAdminId])
 
     return (
         <div className='imageDetails_sideImageCard'>

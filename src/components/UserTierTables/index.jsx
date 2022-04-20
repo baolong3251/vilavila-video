@@ -9,6 +9,7 @@ import FormModal from '../FormModal';
 import FormInput from '../Forms/FormInput';
 import FormTextArea from '../Forms/FormTextArea';
 import { firestore } from '../../firebase/utils';
+import { doc, arrayUnion, arrayRemove, updateDoc} from "firebase/firestore"; 
 
 const mapState = (state) => ({ //this thing can happen if use redux
     currentUser: state.user.currentUser,
@@ -44,7 +45,7 @@ function UserTierTables(props) {
     useEffect(() => {
         if(currentUser) {
             firestore.collection("users").doc(currentUser.id).onSnapshot((snapshot) => {
-                setUserInfo([...userInfo, {
+                setUserInfo([{
                     userId: snapshot.id,
                     displayName: snapshot.data().displayName,
                     thumbnail: snapshot.data().thumbnail,
@@ -76,13 +77,13 @@ function UserTierTables(props) {
     },[props.tier.uid])
 
     useEffect(() => {
-        if(tierUserSigned.length > 0){
+        if(tierUserSigned && tierUserSigned.length > 0){
             var someString = tierUserSigned[0].tier
             someString = someString.slice(4)
             someString = someString * 1
             setTierUserSignedNum(someString)
         }
-        if(tierUserSigned.length == 0){
+        if(tierUserSigned && tierUserSigned.length == 0){
             setTierUserSignedNum(0)
         }
     },[tierUserSigned])
@@ -206,11 +207,17 @@ function UserTierTables(props) {
     const handleIfTier2 = () => {
 
         if(tierUserSignedNum < 2 && tierUserSignedNum > 0){
-            var someArray = tierUserSigned[0].userSigned
-            someArray = someArray.filter(item => item !== userInfo[0].userId)
-            firestore.collection("tiers").doc(tierUserSigned[0].id).set({
-                userSigned: someArray,
-            }, { merge: true })
+            // var someArray = tierUserSigned[0].userSigned
+            // someArray = someArray.filter(item => item !== userInfo[0].userId)
+            // firestore.collection("tiers").doc(tierUserSigned[0].id).set({
+            //     userSigned: someArray,
+            // }, { merge: true })
+
+            const q = doc(firestore, "tiers", tierUserSigned[0].id);
+
+            updateDoc(q, {
+                userSigned: arrayRemove(userInfo[0].userId)
+            })
         }
 
 
@@ -222,11 +229,17 @@ function UserTierTables(props) {
     const handleIfTier3 = () => {
 
         if(tierUserSignedNum < 3 && tierUserSignedNum > 0){
-            var someArray = tierUserSigned[0].userSigned
-            someArray = someArray.filter(item => item !== userInfo[0].userId)
-            firestore.collection("tiers").doc(tierUserSigned[0].id).set({
-                userSigned: someArray,
-            }, { merge: true })
+            // var someArray = tierUserSigned[0].userSigned
+            // someArray = someArray.filter(item => item !== userInfo[0].userId)
+            // firestore.collection("tiers").doc(tierUserSigned[0].id).set({
+            //     userSigned: someArray,
+            // }, { merge: true })
+
+            const q = doc(firestore, "tiers", tierUserSigned[0].id);
+
+            updateDoc(q, {
+                userSigned: arrayRemove(userInfo[0].userId)
+            })
         }
 
         //firestore where (userSigned in currentuser.id) where(uid == props.tier.uid)
@@ -237,11 +250,17 @@ function UserTierTables(props) {
     const handleIfTier4 = () => {
 
         if(tierUserSignedNum < 4 && tierUserSignedNum > 0){
-            var someArray = tierUserSigned[0].userSigned
-            someArray = someArray.filter(item => item !== userInfo[0].userId)
-            firestore.collection("tiers").doc(tierUserSigned[0].id).set({
-                userSigned: someArray,
-            }, { merge: true })
+            // var someArray = tierUserSigned[0].userSigned
+            // someArray = someArray.filter(item => item !== userInfo[0].userId)
+            // firestore.collection("tiers").doc(tierUserSigned[0].id).set({
+            //     userSigned: someArray,
+            // }, { merge: true })
+
+            const q = doc(firestore, "tiers", tierUserSigned[0].id);
+
+            updateDoc(q, {
+                userSigned: arrayRemove(userInfo[0].userId)
+            })
         }
 
         //firestore where (userSigned in currentuser.id) where(uid == props.tier.uid)
@@ -252,11 +271,17 @@ function UserTierTables(props) {
     const handleIfTier5 = () => {
 
         if(tierUserSignedNum < 5 && tierUserSignedNum > 0){
-            var someArray = tierUserSigned[0].userSigned
-            someArray = someArray.filter(item => item !== userInfo[0].userId)
-            firestore.collection("tiers").doc(tierUserSigned[0].id).set({
-                userSigned: someArray,
-            }, { merge: true })
+            // var someArray = tierUserSigned[0].userSigned
+            // someArray = someArray.filter(item => item !== userInfo[0].userId)
+            // firestore.collection("tiers").doc(tierUserSigned[0].id).set({
+            //     userSigned: someArray,
+            // }, { merge: true })
+
+            const q = doc(firestore, "tiers", tierUserSigned[0].id);
+
+            updateDoc(q, {
+                userSigned: arrayRemove(userInfo[0].userId)
+            })
         }
 
         //firestore where (userSigned in currentuser.id) where(uid == props.tier.uid)
@@ -265,17 +290,36 @@ function UserTierTables(props) {
 
     const handleSignUp = () => {
         if(statSigned){
-            var someArray = props.tier.userSigned
-            someArray = someArray.filter(item => item != currentUser.id);
-            firestore.collection("tiers").doc(props.tier.id).set({
-                userSigned: someArray,
-            }, { merge: true })
+            // var someArray = props.tier.userSigned
+            // someArray = someArray.filter(item => item != currentUser.id);
+            // firestore.collection("tiers").doc(props.tier.id).set({
+            //     userSigned: someArray,
+            // }, { merge: true })
+            const q = doc(firestore, "tiers", props.tier.id);
+
+            updateDoc(q, {
+                userSigned: arrayRemove(currentUser.id)
+            })
+            
+            firestore.collection('tierLog').where('uid', '==', props.tier.uid).where('signedUserId', '==', userInfo[0].userId).get().then(
+                
+                function(querySnapshot) {
+                    
+                    querySnapshot.forEach(function(doc) {
+                        doc.ref.delete()
+                    });
+                    
+                }
+
+            )
+            
             setStatSigned(false)
             setTierUserSignedNum(0)
             toggleModal4()
         }
 
         if(!statSigned){
+
             if(userInfo[0].point >= newTierPoint){
                 // handleSetAnotherTier(props.tier.tier)
                 // if(!stat) return
@@ -324,7 +368,7 @@ function UserTierTables(props) {
                         handleIfTier5()
                 }
                 
-                
+                var today = new Date();
                 var pointThing = props.tier.cost*1
                 var currentUserPoint = userInfo[0].point
                 currentUserPoint = currentUserPoint - pointThing
@@ -346,6 +390,28 @@ function UserTierTables(props) {
                     firestore.collection("users").doc(props.tier.uid).set({
                         point: userOfTierPoint,
                     }, { merge: true }),
+
+                    firestore.collection('tierLog').where('uid', '==', props.tier.uid).where('signedUserId', '==', userInfo[0].userId).get().then(
+                    
+                        function(querySnapshot) {
+                            if(!querySnapshot.empty){
+                                querySnapshot.forEach(function(doc) {
+                                    doc.ref.set({
+                                        lastUpdate: today,
+                                    }, { merge: true });
+                                });
+                            }
+
+                            else{
+                                firestore.collection('tierLog').add({
+                                    uid: props.tier.uid,
+                                    signedUserId: userInfo[0].userId,
+                                    lastUpdate: today,
+                                })
+                            }
+                        }
+
+                    )
 
                 )
                 toggleModal3()

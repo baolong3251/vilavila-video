@@ -20,7 +20,7 @@ function Alert(props) {
     return (
             <StyledTableCell align="right">
                 <div className='delete_button' onClick={() => setStatShow(!statShow)}>
-                    Xóa
+                    {props.row.name == "animation" ? null : "Xóa"}
                 </div>
 
                 <div className={statShow ? "tableShow active" : "tableShow"}>

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player'
+import Image from "../../../assets/16526305592141308214.png"
 
 import { firestore } from '../../../firebase/utils';
-import {collection, query, doc, onSnapshot, where} from "firebase/firestore"
+import {collection, query, doc, onSnapshot, where, updateDoc, increment} from "firebase/firestore"
 
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
@@ -16,13 +17,49 @@ import AlertModal from '../../AlertModal';
 import Button from "../../Forms/Button"
 import { Link } from 'react-router-dom';
 import PopUpContainer from '../PopUpContainer';
+import FormTextArea from '../../Forms/FormTextArea';
+import AdOnTop from '../../DisplayAd/AdOnTop';
+
+
+import { makeStyles } from '@material-ui/core/styles';
+import FormLabel from '@material-ui/core/FormLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Checkbox from '@material-ui/core/Checkbox';
+import CloseIcon from '@material-ui/icons/Close';
+import { deleteField } from "firebase/firestore";
+
 
 const mapState = state => ({
     currentUser: state.user.currentUser,
 })
 
+const useStyles = makeStyles((theme) => ({
+    root: {
+        display: 'flex',
+        marginBottom: "10px",
+        margin: "auto",
+        textAlign: "center",
+        justifyContent: "center",
+    },
+    formControl: {
+        
+    },
+    formLabel: {
+        color: "white",
+    },
+    formGroup: {
+        
+    },
+    formControlLabel: {
+        fontSize: "25px!important"
+    },
+}));
 
-function Main({id, url, title, views, desc, date, tags, category}) {
+
+function Main({id, url, title, views, desc, date, tags, category, videoAdminUID, abilityShowMore, abilityAdsBlock, point}) {
     const { currentUser } = useSelector(mapState);
     const [like, setLike] = useState(false)
     const [likeArray, setLikeArray] = useState([])
@@ -32,6 +69,29 @@ function Main({id, url, title, views, desc, date, tags, category}) {
     const [watched, setWatched] = useState(false)
     const [showContainer, setShowContainer] = useState(false)
     const [tagLog, setTagLog] = useState([])
+    const [reportDesc, setReportDesc] = useState("")
+    const classes = useStyles();
+    const [state, setState] = React.useState({
+        spam: true,
+        "Nội dung hoặc bình luận có ý xúc phạm": false,
+        "Không liên quan": false,
+    });
+
+    const handleChange = (event) => {
+        setState({ ...state, [event.target.name]: event.target.checked });
+      };
+    
+    const { spam, mean, notRelate } = state;
+
+    const handleFilter = (obj) => {
+        var keys = Object.keys(obj);
+
+        var filtered = keys.filter(function(key) {
+            return obj[key]
+        });
+
+        return(filtered)
+    }
 
     const toggleModal = () => setHideModal(!hideModal);
 
@@ -66,6 +126,7 @@ function Main({id, url, title, views, desc, date, tags, category}) {
             }) 
         }
         setShowContainer(false)
+        
     }, [id])
 
     useEffect(() => {
@@ -73,7 +134,7 @@ function Main({id, url, title, views, desc, date, tags, category}) {
             checkLike()
             checkSave()
         }
-        getTagLog()
+        // getTagLog()
     }, [currentUser])
 
     useEffect(() => {
@@ -84,10 +145,15 @@ function Main({id, url, title, views, desc, date, tags, category}) {
 
     // ===============================THIS THING FOR UPDATE POINT FOR CONTENT BUT NOT USE YET
     const handlePoint = () => {
+        var currentPoint = point
         var likeTotal = 0
         var viewTotal = views * 10
+        var bonusPoint = 0
         if(allInfo.length > 0) {
             likeTotal = likeArray.length * 100
+        }
+        if(abilityShowMore){
+            bonusPoint = 1000
         }
         var allTotal = 0
         var today = new Date();
@@ -95,9 +161,9 @@ function Main({id, url, title, views, desc, date, tags, category}) {
         var oldTime = Number(date)
         var minute = Math.round(Math.abs(nowTime - oldTime) / 60,2)
         var hour = minute / 60
-        console.log(hour)
-        allTotal = (likeTotal + viewTotal) - (0.04167) * (likeTotal + viewTotal) * hour
-        console.log(allTotal)
+        
+        allTotal = (likeTotal + viewTotal + bonusPoint) - (0.04167) * (likeTotal + viewTotal + bonusPoint) * hour
+        return allTotal
     }
 
     //================================THIS THING GET ALL OF TAG USER CONTACT WITH
@@ -141,11 +207,14 @@ function Main({id, url, title, views, desc, date, tags, category}) {
     }
 
     const handleLike = () => {
+        if(!currentUser) {
+            alert("Không thể thực hiện thích nội dung, xin vui lòng đăng nhập...")
+        }
         if(currentUser){
             // Put the id of currentUser into the follow array
             // const someArray = likeArray[0].likes
             // const found = someArray.find(element => element == currentUser.id);
-            
+            var time = new Date()
             const someArray = allInfo
             const found = someArray.find(element => element.userId == currentUser.id);
             
@@ -163,8 +232,13 @@ function Main({id, url, title, views, desc, date, tags, category}) {
                     userId: currentUser.id, 
                     liked: "true",
                     saved: "false",
-                    reported: "false"
-                })
+                    reported: "false",
+                    likedDate: time,
+                }).then(
+                    firestore.collection('users').doc(videoAdminUID).set({
+                        point: increment(10),
+                    }, { merge: true })
+                )
                 setShowContainer(true)
             }
 
@@ -183,15 +257,25 @@ function Main({id, url, title, views, desc, date, tags, category}) {
                 const foundLiked = found.liked
                 if (foundLiked == "false") {
                     firestore.collection('contentStatus').doc(found.infoId).set({
-                        liked: "true"
-                    }, { merge: true })
+                        liked: "true",
+                        likedDate: time,
+                    }, { merge: true }).then(
+                        firestore.collection('users').doc(videoAdminUID).set({
+                            point: increment(10),
+                        }, { merge: true })
+                    )
                     setShowContainer(true)
                 }
                 
                 if (foundLiked == "true") {
                     firestore.collection('contentStatus').doc(found.infoId).set({
-                        liked: "false"
-                    }, { merge: true })
+                        liked: "false",
+                        likedDate: deleteField(),
+                    }, { merge: true }).then(
+                        firestore.collection('users').doc(videoAdminUID).set({
+                            point: increment(-10),
+                        }, { merge: true })
+                    )
                     setShowContainer(false)
                 }
             }
@@ -222,7 +306,11 @@ function Main({id, url, title, views, desc, date, tags, category}) {
 
 
     const handleSave = () => {
+        if(!currentUser) {
+            alert("Không thể thực hiện lưu nội dung, xin vui lòng đăng nhập...")
+        }
         if(currentUser){
+            var time = new Date()
             const someArray = allInfo
             const found = someArray.find(element => element.userId == currentUser.id);
         
@@ -232,7 +320,8 @@ function Main({id, url, title, views, desc, date, tags, category}) {
                     userId: currentUser.id, 
                     liked: "false",
                     saved: "true",
-                    reported: "false"
+                    reported: "false",
+                    savedDate: time,
                 })
 
             }
@@ -241,19 +330,34 @@ function Main({id, url, title, views, desc, date, tags, category}) {
                 const foundSaved = found.saved
                 if (foundSaved == "false")
                 firestore.collection('contentStatus').doc(found.infoId).set({
-                    saved: "true"
+                    saved: "true",
+                    savedDate: time,
                 }, { merge: true })
                 
                 if (foundSaved == "true")
                 firestore.collection('contentStatus').doc(found.infoId).set({
-                    saved: "false"
+                    saved: "false",
+                    savedDate: deleteField(),
                 }, { merge: true })
             }
         }
     }
 
     const handleReport = () => {
+        if(!currentUser) {
+            alert("Không thể thực hiện báo cáo, xin vui lòng đăng nhập...")
+        }
         if(currentUser){
+            var time = new Date()
+            if(reportDesc == ""){
+                alert("Mô tả báo cáo không được để trống!!!")
+                return
+            }
+
+            var filtered = handleFilter(state)
+            var reportDescString = filtered.join(', ')
+            reportDescString = reportDescString + ", " + reportDesc
+
             const someArray = allInfo
             const found = someArray.find(element => element.userId == currentUser.id);
         
@@ -263,7 +367,9 @@ function Main({id, url, title, views, desc, date, tags, category}) {
                     userId: currentUser.id, 
                     liked: "false",
                     saved: "false",
-                    reported: "true"
+                    reported: "true",
+                    reportDesc: reportDescString,
+                    reportedDate: time,
                 })
 
             }
@@ -272,12 +378,15 @@ function Main({id, url, title, views, desc, date, tags, category}) {
                 const foundReported = found.saved
                 if (foundReported == "false")
                 firestore.collection('contentStatus').doc(found.infoId).set({
-                    reported: "true"
+                    reported: "true",
+                    reportDesc: reportDescString,
+                    reportedDate: time,
                 }, { merge: true })
                 
                 if (foundReported == "true")
                 firestore.collection('contentStatus').doc(found.infoId).set({
-                    reported: "true"
+                    reported: "true",
+                    reportDesc: reportDescString,
                 }, { merge: true })
             }
 
@@ -288,29 +397,45 @@ function Main({id, url, title, views, desc, date, tags, category}) {
 
     const handleWatching = ({ played }) => {
         if(played >= 0.2 && !watched){
-            var numView = views * 1
-            numView = numView + 1
-            var realNumView = numView.toString()
-            var tagArray = tagLog
+            
+            // var tagArray = tagLog
+
+            const viewRef = doc(firestore, "videos", id);
+
+            // Atomically increment the population of the city by 50.
+            updateDoc(viewRef, {
+                views: increment(1)
+            });
+
+            var point = handlePoint()
+            point = point.toString()
 
             firestore.collection('videos').doc(id).set({
-                views: realNumView
+                point: point,
             }, { merge: true })
 
-            if(tags.length > 0 && currentUser){
-                tags.map(tag => {
+            firestore.collection('users').doc(videoAdminUID).set({
+                point: increment(1),
+            }, { merge: true })
 
-                    var someArray = tagArray.find(element => element.tag == tag)
+            // firestore.collection('videos').doc(id).update({
+            //     views: firestore.FieldValue.increment(1)
+            // }, { merge: true })
 
-                    if(!someArray){
-                        firestore.collection('tagLog').add({
-                            uid: currentUser.id, 
-                            tag: tag,
-                        })
-                    }
+            // if(tags.length > 0 && currentUser){
+            //     tags.map(tag => {
+
+            //         var someArray = tagArray.find(element => element.tag == tag)
+
+            //         if(!someArray){
+            //             firestore.collection('tagLog').add({
+            //                 uid: currentUser.id, 
+            //                 tag: tag,
+            //             })
+            //         }
                     
-                })
-            }
+            //     })
+            // }
             setWatched(true)
         }
     }
@@ -368,12 +493,25 @@ function Main({id, url, title, views, desc, date, tags, category}) {
             </div>
         </div>
 
-        {currentUser ? <PopUpContainer 
-                            tags={tags} 
-                            category={category} 
-                            showContainer={showContainer}
-                        /> 
-                        : null}
+        {currentUser ?  <>
+            <div className={showContainer ? 'popUpWhenLike active' : 'popUpWhenLike'}>
+                <div className='popUpWhenLike_title'>
+                    Gợi ý người dùng
+                </div>
+                <div className='popUpWhenLike_turnOffIcon'>
+                    <CloseIcon className='popUpWhenLike_icon' onClick={() => setShowContainer(!showContainer)} />
+                </div> 
+                {showContainer ?
+                    <PopUpContainer 
+                        videoAdminId = {videoAdminUID}
+                        tags={tags ? tags : []} 
+                        category={category} 
+                        showContainer={showContainer}
+                        id={id}
+                    />  
+                : null } 
+            </div> </>
+        : null}
 
         <div className='videoDetails_leftSide_tags'>
             {tags ?
@@ -395,15 +533,23 @@ function Main({id, url, title, views, desc, date, tags, category}) {
                 {desc}
             </p>
         </div>
+        
+        {abilityAdsBlock == "true" ? null :
+            <AdOnTop 
+                Image={Image}
+                Link="https://gamersupps.gg/?afmc=213&cmp_id=15872452240&adg_id=131805543003&kwd=&device=c&gclid=CjwKCAjw3cSSBhBGEiwAVII0Z-7utscsbxqYYMa4h3QCALZ_DkChfECxDVhp-K8eNBP0MTEPUvzBFxoCUIAQAvD_BwE"
+            />
+        }
 
         <AlertModal {...configModal}>
             <h2>
                 Báo cáo
             </h2>
             <p>
-                Báo cáo nội dung sẽ bao gồm: 
+                Báo cáo nội dung sẽ bao gồm: (Hãy đọc luật của page để báo cáo của bạn thêm chính xác nhé)
             </p>
-            <p>
+            <p>Xem luật tại đây: <Link to={'/rule'} target="_blank">Luật</Link></p>
+            {/* <p>
                 - Nội dung không phù hợp
             </p>
             <p>
@@ -414,11 +560,39 @@ function Main({id, url, title, views, desc, date, tags, category}) {
             </p>
             <p>
                 - ...
-            </p>
+            </p> */}
+            <div className={classes.root}>
+                <FormControl component="fieldset" className={classes.formControl}>
+                    {/* <FormLabel className={classes.formLabel} component="legend">Báo cáo nội dung</FormLabel> */}
+                    <FormGroup className={classes.formGroup}>
+                        <FormControlLabel className={classes.formControlLabel}
+                            control={<Checkbox checked={spam} onChange={handleChange} name="spam" />}
+                            label="Spam"
+                        />
+                        <FormControlLabel className={classes.formControlLabel}
+                            control={<Checkbox checked={mean} onChange={handleChange} name="Nội dung hoặc bình luận có ý xúc phạm" />}
+                            label="Nội dung hoặc bình luận có ý xúc phạm"
+                        />
+                        <FormControlLabel className={classes.formControlLabel}
+                            control={<Checkbox checked={notRelate} onChange={handleChange} name="Không liên quan" />}
+                            label="Không liên quan"
+                        />
+                    </FormGroup>
+                    
+                </FormControl>
+                
+            </div>
+            <FormTextArea 
+                label="Mô tả báo cáo"
+                type="Text"
+                placeholder="Mô tả báo cáo"
+                value={reportDesc}
+                handleChange={e => setReportDesc(e.target.value)}
+            />
             <p>
-                * Bằng việc nhấn vào nút xác nhận bên dưới nội dung sẽ chính thức bị báo cáo, 
-                chúng tôi sẽ nhanh chóng xem xét lại nội dung và xác thực lại báo cáo,
-                nếu đúng thì nội dung sẽ bị xóa.
+                * Để giúp admin có thể xem xét nội dung một cách nhanh hơn, hãy xem xét và điền
+                đầy đủ các thông tin cần thiết (có thể là số giây, vị trí vi phạm,...) như thể việc
+                xứ lý sẽ được tiến hành một cách nhanh chóng hơn
             </p>
             <div className='modal_Buttons'>
                 <Button onClick={() => toggleModal()}>
@@ -428,6 +602,11 @@ function Main({id, url, title, views, desc, date, tags, category}) {
                     Xác nhận
                 </Button>
             </div>
+            <p>
+                * Bằng việc nhấn vào nút xác nhận bên dưới nội dung sẽ chính thức bị báo cáo, 
+                chúng tôi sẽ nhanh chóng xem xét lại nội dung và xác thực lại báo cáo,
+                nếu đúng thì nội dung sẽ bị xóa.
+            </p>
         </AlertModal>
     
     </>;

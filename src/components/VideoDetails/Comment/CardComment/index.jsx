@@ -32,7 +32,8 @@ function CardComment(props) {
         firestore.collection('users').doc(props.comment.uid).get().then((snapshot) => {
             setUserInfo({
                 userId: snapshot.id,
-                displayName: snapshot.data().displayName
+                displayName: snapshot.data().displayName,
+                avatar: snapshot.data().avatar,
             })
         })
     }, [props.comment.uid])
@@ -140,7 +141,7 @@ function CardComment(props) {
     return <>
     <div className='videoDetails_displayComment_container'>
         <div className='videoDetails_displayComment_avatar'>
-            <Avatar />
+            <Avatar src={userInfo.userId == props.comment.uid ? userInfo.avatar : null} />
         </div>
         <div className='videoDetails_displayComment_info'>
             <div className='videoDetails_displayComment_name'>
@@ -222,8 +223,8 @@ function CardComment(props) {
                 <div key={replyComment.cmid}>
                     {replyComment.replyId == props.comment.cmid ? (
                         <>
-                            <CardReplyComment replyComment={replyComment}/>
-                            {currentUser && replyComment.uid == currentUser.id ? 
+                            <CardReplyComment replyComment={replyComment} handleLoadReply={handleLoadReply} handleDeleteReply={handleDeleteReply}/>
+                            {/* {currentUser && replyComment.uid == currentUser.id ? 
                             <div className='videoDetails_displayReplyComment_container outa'>
                                 <div className='videoDetails_displayComment_info outainfo'>
                                     <div className='videoDetails_displayComment_buttons'>
@@ -233,7 +234,7 @@ function CardComment(props) {
                                     </div>
                                 </div>
                             </div>
-                            : null }
+                            : null } */}
                         </>
                         )
                     : null}

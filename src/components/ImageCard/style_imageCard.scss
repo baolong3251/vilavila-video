@@ -3,6 +3,7 @@
     max-width: 250px;
     min-width: 25%;
     align-content: flex-start;
+    margin: 10px;
 
     .imageCard_thumbnail {
         height: 140px;
@@ -31,6 +32,21 @@
         display: flex;
         margin-top: 10px;
         padding-right: 30px;
+    }
+
+    .imageCard_info2{
+        display: flex;
+        align-items: center;
+        padding-right: 30px;
+
+        .imageCard_text2{
+            margin-left: 10px;
+            font-size: 13px;
+            
+            p{
+                color: gray;
+            }
+        }
     }
 
     .imageCard_text{

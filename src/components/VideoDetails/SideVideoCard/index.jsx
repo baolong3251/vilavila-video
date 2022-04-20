@@ -7,10 +7,10 @@ import VideoCard from './VideoCard'
 
 function SideVideoCard({category, tags}) {
     const [videos, setVideos] = useState([])
-    const { videoID } = useParams()
+    const { videoID } = useParams()    
 
     useEffect(() => {
-        if(category && tags){
+        if(category){
             // const q = query(collection(firestore, "videos"), where("tags", "array-contains-any", tags));
             // getDocs(q, (snapshot) => {
             //     setVideos(snapshot.docs.map(doc => ({
@@ -27,10 +27,10 @@ function SideVideoCard({category, tags}) {
             //     ))
             // })
 
-            let ref = firestore.collection("videos").where("tier", "==", "").where("privacy", "==", "public")
+            let ref = firestore.collection("videos").orderBy("point", "desc").where("tier", "==", "").where("privacy", "==", "public")
 
-            if(tags) ref = ref.where("tags", "array-contains-any", tags)
-            if(!tags) ref = ref.where("category", "==", category)
+            if(tags.length > 0) ref = ref.where("tags", "array-contains-any", tags)
+            if(tags.length == 0) ref = ref.where("category", "==", category)
 
             ref = ref.where("tier", "==", "")
             

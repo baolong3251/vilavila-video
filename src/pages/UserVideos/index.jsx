@@ -18,7 +18,7 @@ function UserVideos() {
 
   useEffect(() => {
     
-    firestore.collection("videos").where("videoAdminUID", "==", userID).onSnapshot((snapshot) => {
+    firestore.collection("videos").where("videoAdminUID", "==", userID).where("privacy", "==", "public").onSnapshot((snapshot) => {
       try {
         setVideos(snapshot.docs.map(doc => ({
           vid: doc.id, 

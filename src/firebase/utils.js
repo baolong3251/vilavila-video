@@ -38,6 +38,7 @@ export const handleUserProfile = async ({ userAuth, additionalData }) => {
                 avatar: "",
                 createdDate: timestamp,
                 userRoles,
+                point: 0,
                 ...additionalData
             })
         } catch(err) {

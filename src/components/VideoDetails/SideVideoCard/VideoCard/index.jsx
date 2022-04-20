@@ -16,7 +16,8 @@ function VideoCard(props) {
     useEffect(() => {
         if (props.video.videoAdminUID && channel.length == 0) {
             firestore.collection("users").doc(props.video.videoAdminUID).onSnapshot((snapshot) => {
-                setChannel([...channel,{
+                setChannel([{
+                    id: snapshot.id,
                     displayName: snapshot.data().displayName,
                     avatar: snapshot.data().avatar,
                     follow: snapshot.data().follow,
@@ -59,11 +60,11 @@ function VideoCard(props) {
             </Link>
             <div className='videoDetails_rightSide_videoCardsInfo'>
                 <div className="videoCards_text">
-                    <Link>
+                    <Link to={`/video/${props.video.vid}`}>
                         <h4>{props.video.title}</h4>
                     </Link>
                     
-                   <Link>
+                   <Link to={`/user/${channel.length > 0 ? channel[0].id : null}`}>
                         <p>{channel.length > 0 ? channel[0].displayName : null}</p>
                    </Link>
                     <p>

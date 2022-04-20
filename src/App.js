@@ -32,12 +32,24 @@ import Image from "./pages/Image";
 import ImageLayout from "./layouts/ImageLayout";
 import Videos from "./pages/Videos";
 import Images from "./pages/Images";
-import AdminToolbar from "./components/AdminToolbar";
+// import AdminToolbar from "./components/AdminToolbar";
 import AdminLayout from "./layouts/AdminLayout";
 import Admin from "./pages/Admin";
 import AdminCategory from "./components/AdminCategory";
 import AdminReport from "./components/AdminReport";
 import AdminAccount from "./components/AdminAccount";
+import GetPoint from "./components/PointLayout/GetPoint.jsx";
+import UserPrivateContents from "./pages/UserPrivateContents";
+import UserContentLiked from "./pages/UserContentLiked";
+import UserContentSaved from "./pages/UserContentSaved";
+import SuccessPage from "./components/PointLayout/SuccessPage";
+import GetMoneyFromPoint from "./components/PointLayout/GetMoneyFromPoint";
+import AdminExchange from "./components/AdminExchange";
+import Rule from "./pages/Rule";
+import AdminEditRule from "./components/AdminEditRule";
+import Contact from "./pages/Contact";
+import ReportAnalytics from "./components/AdminAnalytics/ReportAnalytics";
+import AccountAnalytics from "./components/AdminAnalytics/AccountAnalytics";
 
 
 function App() {
@@ -96,6 +108,26 @@ function App() {
             render={() => (
               <MainLayout >
                 <Search />
+              </MainLayout>
+            )}
+          />
+
+          {/* ====================RULE PAGE================== */}
+          
+          <Route exact path="/rule"
+            render={() => (
+              <MainLayout >
+                <Rule />
+              </MainLayout>
+            )}
+          />
+
+          {/* ====================CONTACT PAGE================== */}
+          
+          <Route exact path="/contact"
+            render={() => (
+              <MainLayout >
+                <Contact />
               </MainLayout>
             )}
           />
@@ -226,10 +258,31 @@ function App() {
             </UserLayout>
           )}/>
 
-          {/* ====================USER DETIALS TIERS PAGE =================== */}
+          {/* ====================USER DETIALS IMAGES PAGE =================== */}
           <Route exact path="/user/images/:userID" render={() => ( ///:videoID
             <UserLayout>
               <UserImages />
+            </UserLayout>
+          )}/>
+
+          {/* ====================USER DETIALS PRIVATE PAGE =================== */}
+          <Route exact path="/user/private/:userID" render={() => ( ///:videoID
+            <UserLayout>
+              <UserPrivateContents />
+            </UserLayout>
+          )}/>
+
+          {/* ====================USER DETIALS PRIVATE PAGE =================== */}
+          <Route exact path="/user/liked/:userID" render={() => ( ///:videoID
+            <UserLayout>
+              <UserContentLiked />
+            </UserLayout>
+          )}/>
+
+          {/* ====================USER DETIALS PRIVATE PAGE =================== */}
+          <Route exact path="/user/saved/:userID" render={() => ( ///:videoID
+            <UserLayout>
+              <UserContentSaved />
             </UserLayout>
           )}/>
 
@@ -237,6 +290,28 @@ function App() {
           <Route exact path="/point/:userID" render={() => ( ///:videoID
             <MainLayout>
               <Point />
+            </MainLayout>
+          )}/>
+
+          <Route exact path="/getPoint/:cost/:userID" render={() => ( ///:videoID
+            <WithAuth>
+              <MainLayout>
+                <GetPoint />
+              </MainLayout>
+            </WithAuth>
+          )}/>
+
+          <Route exact path="/exchangePoint/:cost/:userID" render={() => ( ///:videoID
+            <WithAuth>
+              <MainLayout>
+                <GetMoneyFromPoint />
+              </MainLayout>
+            </WithAuth>
+          )}/>
+          
+          <Route exact path="/getPointSuccess/:results" render={() => ( ///:videoID
+            <MainLayout>
+              <SuccessPage />
             </MainLayout>
           )}/>
 
@@ -265,10 +340,42 @@ function App() {
             </WithAdminAuth>
           )} />
 
+          <Route exact path="/admin/reportLog" render={() => (
+            <WithAdminAuth>
+              <AdminLayout>
+                <ReportAnalytics />
+              </AdminLayout>
+            </WithAdminAuth>
+          )} />
+
+          <Route exact path="/admin/accountLog" render={() => (
+            <WithAdminAuth>
+              <AdminLayout>
+                <AccountAnalytics />
+              </AdminLayout>
+            </WithAdminAuth>
+          )} />
+
           <Route exact path="/admin/accounts" render={() => (
             <WithAdminAuth>
               <AdminLayout>
                 <AdminAccount />
+              </AdminLayout>
+            </WithAdminAuth>
+          )} />
+
+          <Route exact path="/admin/exchanges" render={() => (
+            <WithAdminAuth>
+              <AdminLayout>
+                <AdminExchange />
+              </AdminLayout>
+            </WithAdminAuth>
+          )} />
+
+          <Route exact path="/admin/editRule" render={() => (
+            <WithAdminAuth>
+              <AdminLayout>
+                <AdminEditRule />
               </AdminLayout>
             </WithAdminAuth>
           )} />

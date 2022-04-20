@@ -33,7 +33,7 @@ function Comment() {
                 time: doc.data().timestamp
             })))
         })
-    }, [])
+    }, [videoID])
 
     const handleAddComment = (e) => {
         e.preventDefault();

@@ -29,31 +29,36 @@ function UserEditVideo() {
     const [fileImageUrl, setFileImageUrl] = useState('');
     const [images, setImages] = useState([]);
     const [tierChoice, setTierChoice] = React.useState('');
+    const [privacyChoice, setPrivacyChoice] = React.useState('public');
 
     useEffect(() => {
         if (currentUser && videoID && currentUser.id == userID && video.length == 0) {
-            firestore.collection("videos").doc(videoID).onSnapshot((snapshot) => {
-                setVideo([...video,{
-                    vid: snapshot.id, 
-                    title: snapshot.data().title,
-                    views: snapshot.data().views,
-                    privacy: snapshot.data().privacy,
-                    desc: snapshot.data().desc,
-                    category: snapshot.data().category,
-                    sourceLink: snapshot.data().sourceLink,
-                    thumbnail: snapshot.data().thumbnail,
-                    createdDate: snapshot.data().createdDate,
-                    videoAdminUID: snapshot.data().videoAdminUID,
-                    tier: snapshot.data().tier,
-                    tags: snapshot.data().tags,
-                }])
+            firestore.collection("videos").doc(videoID).get().then((snapshot) => {
+                try {
+                    setVideo([...video,{
+                        vid: snapshot.id, 
+                        title: snapshot.data().title,
+                        views: snapshot.data().views,
+                        privacy: snapshot.data().privacy,
+                        desc: snapshot.data().desc,
+                        category: snapshot.data().category,
+                        sourceLink: snapshot.data().sourceLink,
+                        thumbnail: snapshot.data().thumbnail,
+                        createdDate: snapshot.data().createdDate,
+                        videoAdminUID: snapshot.data().videoAdminUID,
+                        tier: snapshot.data().tier,
+                        tags: snapshot.data().tags,
+                    }])
+                } catch (error) {
+                    
+                }
             }) 
         }
     }, [currentUser])
 
     useEffect(() => {
         if (currentUser && videoID && currentUser.id == userID && tiers.length == 0) {
-            firestore.collection("tiers").where("uid", "==", currentUser.id).onSnapshot((snapshot) => {
+            firestore.collection("tiers").where("uid", "==", currentUser.id).get().then((snapshot) => {
                 setTiers(snapshot.docs.map(doc => ({
                     tid: doc.id, 
                     uid: doc.data().uid,
@@ -149,6 +154,10 @@ function UserEditVideo() {
         setTierChoice(event.target.value);
     };
 
+    const handleChangePrivacyChoice = (event) => {
+        setPrivacyChoice(event.target.value);
+    };
+
     const handleChangeFileImage = (e) => {
         for (let i = 0; i < e.target.files.length; i++) {
             const newImage = e.target.files[i];
@@ -190,6 +199,7 @@ function UserEditVideo() {
                 thumbnail: fileImageUrl,
                 tier: tier,
                 tags: tags,
+                privacy: privacyChoice,
             }, { merge: true }).then(
                 handleDeleteThumbnail(video[0].thumbnail)
             )
@@ -201,6 +211,7 @@ function UserEditVideo() {
                 thumbnail: fileImageUrl,
                 tier: tier,
                 tags: tags,
+                privacy: privacyChoice,
             }, { merge: true }).then(
             )
         }
@@ -210,6 +221,7 @@ function UserEditVideo() {
                 desc: newDesc,
                 tier: tier,
                 tags: tags,
+                privacy: privacyChoice,
             }, { merge: true })
         }
         alert('success')
@@ -298,6 +310,16 @@ function UserEditVideo() {
                         <FormControlLabel disabled={tiers.find(item => item.tier == "tier3") ? null : "disabled"} value="tier3" control={<Radio />} label="Tier 3" />
                         <FormControlLabel disabled={tiers.find(item => item.tier == "tier4") ? null : "disabled"} value="tier4" control={<Radio />} label="Tier 4" />
                         <FormControlLabel disabled={tiers.find(item => item.tier == "tier5") ? null : "disabled"} value="tier5" control={<Radio />} label="Tier 5" />
+                    </RadioGroup>
+                </FormControl>
+            </div>
+
+            <div className='userVideos-videoCard-container'>
+                <FormControl className='userVideos-videoCard-radioBoxContainer' component="fieldset">
+                    <label>Quyền riêng tư</label>
+                    <RadioGroup className='userVideos-videoCard-radioBox' aria-label="privacy" name="privacy" value={privacyChoice} onChange={handleChangePrivacyChoice}>
+                        <FormControlLabel value="public" control={<Radio />} label="Công khai" />
+                        <FormControlLabel value="private" control={<Radio />} label="Riêng tư" />
                     </RadioGroup>
                 </FormControl>
             </div>

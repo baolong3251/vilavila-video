@@ -10,7 +10,7 @@
         padding-bottom: 0;
         border-radius: 5px;
         margin-bottom: 20px;
-        margin-top: 10px;
+        margin-top: 10px!important;
     }
 
     // .container_video > h2 {
@@ -43,4 +43,19 @@
 .upper{
     width: 90%;
     margin: auto;
+}
+
+.showVideos_ad{
+    width: 100%;
+
+    .adCard{
+        height: auto;
+
+        .adCard_img{
+            a{
+                width: 100%;
+            }
+
+        }
+    }
 }

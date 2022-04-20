@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import "./style_adcard.scss"
 
 function AdCard({image, link}) {
@@ -7,7 +6,7 @@ function AdCard({image, link}) {
         <div className='adCard'>
             
             <div className='adCard_img'>
-                <a href={link}>
+                <a href={link} target="_blank">
                     <img src={image} />
                 </a>
             </div>

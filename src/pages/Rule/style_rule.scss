@@ -1,0 +1,20 @@
+.rule{
+    margin: 10px;
+    margin-top: 25px;
+    line-height: 1.5;
+
+    .rule_ad{
+        width: 100%;
+
+        .adCard{
+            height: auto;
+
+            .adCard_img{
+                a{
+                    width: 100%;
+                }
+
+            }
+        }
+    }
+}

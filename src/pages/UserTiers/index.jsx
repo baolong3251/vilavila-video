@@ -51,6 +51,7 @@ function UserTiers() {
       tier: newTier,
       cost: realCost,
       desc: desc,
+      userSigned: [],
     });
     resetForm()
   }

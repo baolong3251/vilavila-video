@@ -28,7 +28,8 @@ function CardReplyComment(props) {
   useEffect(() => {
     firestore.collection('users').doc(props.replyComment.uid).onSnapshot((snapshot) => {
         setUserInfo({
-            displayName: snapshot.data().displayName
+            displayName: snapshot.data().displayName,
+            avatar: snapshot.data().avatar,
         })
     })
   }, [props.replyComment.cmid])
@@ -59,6 +60,7 @@ function CardReplyComment(props) {
             timestamp: timestamp
         })
         resetForm()
+        props.handleLoadReply()
     }catch(err){
         console.log(err)
     }
@@ -78,7 +80,7 @@ function CardReplyComment(props) {
   return <>
     <div className='imageDetails_displayReplyComment_container'>
         <div className='imageDetails_displayComment_avatar'>
-            <Avatar />
+            <Avatar src={userInfo.avatar} />
         </div>
         <div className='imageDetails_displayComment_info'>
             <div className='imageDetails_displayComment_name'>
@@ -88,24 +90,27 @@ function CardReplyComment(props) {
                 {comment}
             </div>
             <div className='imageDetails_displayComment_buttons'>
-                {/* {!reply ? 
-                    <div className='videoDetails_displayComment_button' onClick={() => currentUser ? setReply(true) : null}>
-                        <ReplyIcon className='videoDetails_displayComment_icon' />
+                {!reply ? 
+                    <div className='imageDetails_displayComment_button' onClick={() => currentUser ? setReply(true) : null}>
+                        <ReplyIcon className='imageDetails_displayComment_icon' />
                     </div> : 
-                    <div className='videoDetails_displayComment_button' onClick={() => setReply(false)}>
-                        <CancelIcon className='videoDetails_displayComment_icon' />
+                    <div className='imageDetails_displayComment_button' onClick={() => setReply(false)}>
+                        <CancelIcon className='imageDetails_displayComment_icon' />
                     </div> 
-                } */}
+                }
 
                 {currentUser && props.replyComment.uid == currentUser.id ? <>
                     {!edit ? 
                         <div onClick={() => setEdit(true)} className='imageDetails_displayComment_button'>
                             <EditIcon className='imageDetails_displayComment_icon' />
                         </div> : 
-                        <div onClick={() => setEdit(false)} className='videoDetails_displayComment_button'>
+                        <div onClick={() => setEdit(false)} className='imageDetails_displayComment_button'>
                             <CancelIcon className='imageDetails_displayComment_icon' />
                         </div>
                     }
+                    <div onClick={() => props.handleDeleteReply(props.replyComment.cmid)} className='imageDetails_displayComment_button'>
+                        <DeleteIcon className='imageDetails_displayComment_icon' />
+                    </div>
                     {/* <div onClick={() => firestore
                                         .collection('comments')
                                         .doc(props.replyComment.cmid)

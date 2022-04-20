@@ -88,7 +88,7 @@ function UploadImage() {
         if(fileImages == '') return
         const number = Math.random();
         fileImages.map((image) => {
-            if(fileImages[0].size > 10e6) {
+            if(image.size > 10e6) {
                 alert('file của bạn đã vượt quá 10MB xin hãy chọn file khác')
                 return
             }
@@ -129,10 +129,13 @@ function UploadImage() {
     }, [fileImages])
 
     console.log(fileImageUrl)
+    console.log(fileImages)
+    console.log(imageId)
     
     useEffect(() => {
         
         handleUploadFireStore()
+        
        
     }, [fileImageUrl])
 
@@ -144,6 +147,7 @@ function UploadImage() {
                 firestore.collection('images').add({
                     sourceLink: fileImageUrl,
                     imageAdminUID: userid,
+                    privacy: "not-done",
                 }).then(docRef => {
                     setImageId(docRef.id)
                 })
@@ -156,6 +160,17 @@ function UploadImage() {
         }
     } 
 
+    const handleUploadFireStoreWhenArray0 = (arr) => {
+        var idThing = imageId
+        
+        if(idThing !== ''){
+            firestore.collection('images').doc(idThing).set({
+                sourceLink: arr,
+            }, { merge: true })
+        }
+        
+    } 
+
     const handleChangeFileImage = (e) => {
         for (let i = 0; i < e.target.files.length; i++) {
             const newImage = e.target.files[i];
@@ -164,17 +179,34 @@ function UploadImage() {
         }
     }
 
+    console.log(fileImageUrl)
+
     const handleDeleteImage = (imgUrl) => {
         var someArray = fileImageUrl
-        someArray = someArray.filter(url => url != imgUrl);
-        var desertRef = storage.refFromURL(imgUrl);
+        if(someArray.length > 1) {
+            someArray = someArray.filter(url => url != imgUrl);
+            var desertRef = storage.refFromURL(imgUrl);
 
-        deleteObject(desertRef).then(() => {
-            setFileImageUrl(someArray)
-            alert('Đã xóa!!')
-        }).catch((error) => {
-            console.log(error)
-        });
+            deleteObject(desertRef).then(() => {
+                setFileImageUrl(someArray)
+                alert('Đã xóa!!')
+            }).catch((error) => {
+                console.log(error)
+            });
+        }
+
+        else {
+            someArray = [];
+            var desertRef = storage.refFromURL(imgUrl);
+
+            deleteObject(desertRef).then(() => {
+                handleUploadFireStoreWhenArray0(someArray)
+                setFileImageUrl(someArray)
+                alert('Đã xóa!!')
+            }).catch((error) => {
+                console.log(error)
+            });
+        }
   
     }
 

@@ -97,7 +97,7 @@ function FollowingVideo() {
         <div className='container_video following-thing'>
             <div className='upper'>
                 <h2 className='label_video_type'>
-                    Kênh theo dõi {userInfo.length !== 0 && [<Link>Xem thêm</Link>]}
+                    Kênh theo dõi
                 </h2>
                 <div className='layout_video'>
 

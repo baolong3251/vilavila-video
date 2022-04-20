@@ -73,11 +73,14 @@ function UploadVideo() {
             firestore.collection('videos').add({
                 sourceLink: filevideoUrl,
                 videoAdminUID: userid,
+                privacy: "not-done",
             }).then(docRef => {
                 setVid(docRef.id)
             })
         }
     }, [filevideoUrl])
+
+    console.log(vId)
 
     // const handleUploadVideoFireStore = () => {
     //     var idThing = vId
@@ -155,9 +158,11 @@ function UploadVideo() {
 
     const handleDeleteThumbnail = (e) => {
         var desertRef = storage.refFromURL(fileImageUrl);
+        var thumb = ""
 
         deleteObject(desertRef).then(() => {
             setFileImageUrl('')
+            updateFireStore(thumb)
             alert('success')
         }).catch((error) => {
             console.log(error)
@@ -169,7 +174,23 @@ function UploadVideo() {
         if(fileImageUrl == '') {
             setProgressThumbnail(0)
         }
+
+        if(vId !== '' && fileImageUrl !== ""){
+            updateFireStore(fileImageUrl)
+        }
     }, [fileImageUrl])
+
+    const updateFireStore = (thumb) => {
+        firestore
+            .collection("videos")
+            .doc(vId)
+            .set({
+                thumbnail: thumb,
+            }, { merge: true })
+            .then(() => {
+                
+            })
+    }
 
     //HANDLE RESET FORM------------------
 
@@ -307,6 +328,9 @@ function UploadVideo() {
         var sourceLink = filevideoUrl
         var thumbnail = fileImageUrl
         var titleForSearch = title.toLowerCase()
+        var titleForSearchRev = titleForSearch.split("").reverse().join("");
+        var point = 0
+
         if(vId == ''){
             alert("Không có video nào để xử lý")
             return
@@ -330,6 +354,8 @@ function UploadVideo() {
                 thumbnail,
                 tier,
                 titleForSearch,
+                titleForSearchRev,
+                point,
             })
         )
         
@@ -386,26 +412,29 @@ function UploadVideo() {
                         </>
                     }    
                     <div>
-                    <ReactPlayer 
-                        className="react-player"
-                        url={filevideoUrl} 
-                        controls = {true}
-                        width="20%"
-                        height="20%"
-                    />
+                    <div className='uploadVideo_videoExample'>
+                        <ReactPlayer 
+                            className="react-player"
+                            url={filevideoUrl} 
+                            controls = {true}
+                            width="100%"
+                            height="100%"
+                        />
+                    </div>
                     </div>
                 </div>
 
                 <div className='uploadVideo_container'>
                     {progressThumbnail > 0 ?
                         <progress value={progressThumbnail} max="100" /> 
-                        :
+                        :   vId !== '' ?
                             <FormInput 
                                 label="Hình đại diện"
                                 type="file"
                                 accept="image/*"
                                 handleChange={handleChangeFileImage}
                             />
+                        : null
                     }    
                     
                     {fileImageUrl == '' ? null : 
@@ -448,7 +477,7 @@ function UploadVideo() {
                         {
                             tags.map((tag) => {
                                 return(
-                                    <span className='tag'>
+                                    <span key={tag} className='tag'>
                                         {tag} 
                                         <div onClick={() => handleDeleteTag(tag)} className='del-tag'>
                                             x

@@ -117,6 +117,16 @@ function Header() {
                                 Hình ảnh
                             </Link>
                         </li>
+                        <li>
+                            <Link to={`/rule`}>
+                                Luật
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to={`/contact`}>
+                                Liên hệ
+                            </Link>
+                        </li>
                     </ul>
                 </div>
 

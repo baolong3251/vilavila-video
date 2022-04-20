@@ -30,22 +30,27 @@ function UserEditImage() {
     const [fileImageUrl, setFileImageUrl] = useState([]);
     const [images, setImages] = useState([]);
     const [tierChoice, setTierChoice] = React.useState('');
+    const [privacyChoice, setPrivacyChoice] = React.useState('public');
     const [urlForDelete, setUrlForDelete] = useState([])
 
     useEffect(() => {
         if (currentUser && imageID && currentUser.id == userID && image.length == 0) {
-            firestore.collection("images").doc(imageID).onSnapshot((snapshot) => {
-                setImage([...image,{
-                    id: snapshot.id, 
-                    title: snapshot.data().title,
-                    privacy: snapshot.data().privacy,
-                    desc: snapshot.data().desc,
-                    sourceLink: snapshot.data().sourceLink,
-                    createdDate: snapshot.data().createdDate,
-                    imageAdminUID: snapshot.data().videoAdminUID,
-                    tier: snapshot.data().tier,
-                    tags: snapshot.data().tags,
-                }])
+            firestore.collection("images").doc(imageID).get().then((snapshot) => {
+                try {
+                    setImage([...image,{
+                        id: snapshot.id, 
+                        title: snapshot.data().title,
+                        privacy: snapshot.data().privacy,
+                        desc: snapshot.data().desc,
+                        sourceLink: snapshot.data().sourceLink,
+                        createdDate: snapshot.data().createdDate,
+                        imageAdminUID: snapshot.data().videoAdminUID,
+                        tier: snapshot.data().tier,
+                        tags: snapshot.data().tags,
+                    }])
+                } catch (error) {
+                    
+                }
             }) 
         }
     }, [currentUser])
@@ -149,6 +154,10 @@ function UserEditImage() {
         setTierChoice(event.target.value);
     };
 
+    const handleChangePrivacyChoice = (event) => {
+        setPrivacyChoice(event.target.value);
+    };
+
     const handleChangeFileImage = (e) => {
         for (let i = 0; i < e.target.files.length; i++) {
             const newImage = e.target.files[i];
@@ -226,6 +235,7 @@ function UserEditImage() {
                 sourceLink: array3,
                 tier: tier,
                 tags: tags,
+                privacy: privacyChoice,
             }, { merge: true })
         }
         
@@ -335,6 +345,16 @@ function UserEditImage() {
                         <FormControlLabel disabled={tiers.find(item => item.tier == "tier3") ? null : "disabled"} value="tier3" control={<Radio />} label="Tier 3" />
                         <FormControlLabel disabled={tiers.find(item => item.tier == "tier4") ? null : "disabled"} value="tier4" control={<Radio />} label="Tier 4" />
                         <FormControlLabel disabled={tiers.find(item => item.tier == "tier5") ? null : "disabled"} value="tier5" control={<Radio />} label="Tier 5" />
+                    </RadioGroup>
+                </FormControl>
+            </div>
+
+            <div className='userImages-imageCard-container'>
+                <FormControl className='userImages-imageCard-radioBoxContainer' component="fieldset">
+                    <label>Quyền riêng tư</label>
+                    <RadioGroup className='userImages-imageCard-radioBox' aria-label="privacy" name="privacy" value={privacyChoice} onChange={handleChangePrivacyChoice}>
+                        <FormControlLabel value="public" control={<Radio />} label="Công khai" />
+                        <FormControlLabel value="private" control={<Radio />} label="Riêng tư" />
                     </RadioGroup>
                 </FormControl>
             </div>

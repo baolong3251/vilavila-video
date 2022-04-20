@@ -221,8 +221,8 @@ function CardComment(props) {
                 <div key={replyComment.cmid}>
                     {replyComment.replyId == props.comment.cmid ? (
                         <>
-                            <CardReplyComment replyComment={replyComment}/>
-                            {currentUser && replyComment.uid == currentUser.id ? 
+                            <CardReplyComment replyComment={replyComment} handleLoadReply={handleLoadReply} handleDeleteReply={handleDeleteReply}/>
+                            {/* {currentUser && replyComment.uid == currentUser.id ? 
                             <div className='imageDetails_displayReplyComment_container outa'>
                                 <div className='imageDetails_displayComment_info outainfo'>
                                     <div className='imageDetails_displayComment_buttons'>
@@ -232,7 +232,7 @@ function CardComment(props) {
                                     </div>
                                 </div>
                             </div>
-                            : null }
+                            : null } */}
                         </>
                         )
                     : null}

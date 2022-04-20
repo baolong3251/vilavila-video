@@ -18,7 +18,7 @@ function Alert(props) {
             <p>Hãy nhấn nút xác nhận để thực hiện thao tác, hoặc nhấn hủy để hủy bỏ thao tác</p>
             
             <div className='button_flex'>
-            <Button onClick={() => props.handleDelete(props.sd.id)}>
+            <Button onClick={() => props.handleDelete(props.sd.id, props.sd.email)}>
                 Xác nhận
             </Button>
             <Button onClick={() => setStatShow(!statShow)}>

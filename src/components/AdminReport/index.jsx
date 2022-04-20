@@ -8,11 +8,10 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import Button from '../Forms/Button';
-import FormInput from '../Forms/FormInput';
 import { firestore, storage } from '../../firebase/utils';
 import DataRow from './DataRow';
 import { deleteObject } from 'firebase/storage'
+import { deleteField } from "firebase/firestore";
 
 
 const StyledTableCell = withStyles((theme) => ({
@@ -30,22 +29,10 @@ const StyledTableRow = withStyles((theme) => ({
   root: {
     '&:nth-of-type(odd)': {
       // backgroundColor: theme.palette.action.hover,
-      backgroundColor: "#a0e7d9",
+      backgroundColor: "rgba(75, 192, 192, 0.2)",
     },
   },
 }))(TableRow);
-
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
 
 const useStyles = makeStyles({
   table: {
@@ -57,58 +44,86 @@ function AdminReport() {
   const classes = useStyles()
   const [contentArray, setContentArray] = useState([]);
   const [contentArraySorted, setContentArraySorted] = useState([]);
-  const [contentData, setContentData] = useState([])
+  const [contentSpam, setContentSpam] = useState([]);
+  const [contentMean, setContentMean] = useState([]);
+  const [contentNotRelate, setContentNotRelate] = useState([]);
   const [statShow, setStatShow] = useState(false)
   const [statShow2, setStatShow2] = useState(false)
 
   useEffect(() => {
     
-    firestore.collection("contentStatus").where("reported", "==", "true").onSnapshot(snapshot => {
+    firestore.collection("contentStatus").where("reported", "==", "true").orderBy("reportedDate", "asc").onSnapshot(snapshot => {
       setContentArray(snapshot.docs.map(doc => ({
         id: doc.id, 
         contentId: doc.data().contentId,
         userId: doc.data().userId,
+        reportDesc: doc.data().reportDesc,
       })))
     })
    
   }, [])
 
-  useEffect(() => {
+  // useEffect(() => {
     
-    if(contentArray.length > 0){
-      var result = contentArray.map(a => a.contentId);
-      eliminateDuplicates(result)
-    }
+  //   if(contentArray.length > 0){
+  //     // var result = contentArray.map(a => a.contentId);
+  //     // eliminateDuplicates(result)
+
+  //     handleSort()
+  //   }
    
-  }, [contentArray])
+  // }, [contentArray])
 
-  const eliminateDuplicates = (arr) => {
-    var i,
-        len = arr.length,
-        out = [],
-        obj = {};
+  // const eliminateDuplicates = (arr) => {
+  //   var i,
+  //       len = arr.length,
+  //       out = [],
+  //       obj = {};
   
-    for (i = 0; i < len; i++) {
-      obj[arr[i]] = 0;
-    }
-    for (i in obj) {
-        out.push(i);
-    }
-    setContentArraySorted(out)
-  }
+  //   for (i = 0; i < len; i++) {
+  //     obj[arr[i]] = 0;
+  //   }
+  //   for (i in obj) {
+  //       out.push(i);
+  //   }
+  //   setContentArraySorted(out)
+  // }
 
-  const handleDeleteReport = (id) => {
+  // const handleSort = () =>{
+  //   const result1 = contentArray.filter(word => word.reportDesc.includes("spam"));
+  //   const result2 = contentArray.filter(word => word.reportDesc.includes("Nội dung hoặc bình luận có ý xúc phạm"));
+  //   const result3 = contentArray.filter(word => word.reportDesc.includes("Không liên quan"));
+    
+  //   setContentSpam(result1)
+  //   setContentMean(result2)
+  //   setContentNotRelate(result3)
+  // }
+
+  const handleDeleteReport = (id, reportId, uid, userName, contentName) => {
     if(contentArraySorted.length == 1){
       setContentArraySorted([])
     }
     var cat = firestore.collection('contentStatus').where('contentId', '==', id);
+    var time = new Date()
 
     cat.get().then(function(querySnapshot) {
       querySnapshot.forEach(function(doc) {
           doc.ref.set({
             reported: "false",
-          }, { merge: true });
+            reportDesc: "",
+            reportedDate: deleteField(),
+          }, { merge: true })
       });
+    })
+
+    firestore.collection("reportLog").add({
+      reportId: reportId,
+      time: time,
+      contentId: id,
+      userId: uid,
+      userName: userName,
+      contentName: contentName,
+      method: "Hủy báo cáo",
     })
 
     reset()
@@ -116,7 +131,7 @@ function AdminReport() {
     
   }
 
-  const handleDeleteContent = (id) => {
+  const handleDeleteContent = (id, reportId, uid, userName, contentName) => {
     if(contentArraySorted.length == 1){
       setContentArraySorted([])
     }
@@ -126,6 +141,8 @@ function AdminReport() {
 
     var someArrayVid = []
     var someArrayImg = []
+
+    var time = new Date()
 
     firestore.collection("videos").doc(id).get().then(snapshot => {
       try{
@@ -169,6 +186,16 @@ function AdminReport() {
       querySnapshot.forEach(function(doc) {
           doc.ref.delete()
       });
+    })
+
+    firestore.collection("reportLog").add({
+      reportId: reportId,
+      time: time,
+      contentId: id,
+      userId: uid,
+      userName: userName,
+      contentName: contentName,
+      method: "Xóa nội dung",
     })
 
     // if (someArrayVid.length > 0){
@@ -238,27 +265,81 @@ function AdminReport() {
 
   return (
     <div className='adminReport'>
-      <TableContainer component={Paper}>
-        <Table className={classes.table} aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>Tên nội dung</StyledTableCell>
-              <StyledTableCell align="right">Id nội dung</StyledTableCell>
-              <StyledTableCell align="right">Tên người đăng</StyledTableCell>
-              <StyledTableCell align="right"></StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {contentArraySorted.length > 0 && [contentArraySorted.map((data) => (
-              <StyledTableRow key={data}>
+      <div>
+        <TableContainer component={Paper}>
+          <Table className={classes.table} aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>Tên nội dung</StyledTableCell>
+                <StyledTableCell align="center">Id nội dung</StyledTableCell>
+                <StyledTableCell align="center">Nội dung báo cáo</StyledTableCell>
+                <StyledTableCell align="center">Tên người đăng</StyledTableCell>
+                <StyledTableCell align="center"></StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {contentArray.length > 0 && [contentArray.map((data) => (
+                <StyledTableRow key={data.id}>
 
-                <DataRow data={data} handleDeleteReport={handleDeleteReport} handleDeleteContent={handleDeleteContent} />
-                
-              </StyledTableRow>
-            ))]}
-          </TableBody>
-        </Table>
-      </TableContainer>
+                  <DataRow data={data.contentId} handleDeleteReport={handleDeleteReport} handleDeleteContent={handleDeleteContent} reportDesc={data.reportDesc} reportId={data.id}/>
+                  
+                </StyledTableRow>
+              ))]}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
+      
+      {/* <div>
+        <TableContainer component={Paper}>
+          <Table className={classes.table} aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>Tên nội dung</StyledTableCell>
+                <StyledTableCell align="center">Id nội dung</StyledTableCell>
+                <StyledTableCell align="center">Nội dung báo cáo</StyledTableCell>
+                <StyledTableCell align="center">Tên người đăng</StyledTableCell>
+                <StyledTableCell align="center"></StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {contentMean.length > 0 && [contentMean.map((data) => (
+                <StyledTableRow key={data.id}>
+
+                  <DataRow data={data.contentId} handleDeleteReport={handleDeleteReport} handleDeleteContent={handleDeleteContent} reportDesc={data.reportDesc} reportId={data.id}/>
+                  
+                </StyledTableRow>
+              ))]}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
+      
+      <div>
+        <TableContainer component={Paper}>
+          <Table className={classes.table} aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>Tên nội dung</StyledTableCell>
+                <StyledTableCell align="center">Id nội dung</StyledTableCell>
+                <StyledTableCell align="center">Nội dung báo cáo</StyledTableCell>
+                <StyledTableCell align="center">Tên người đăng</StyledTableCell>
+                <StyledTableCell align="center"></StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {contentNotRelate.length > 0 && [contentNotRelate.map((data) => (
+                <StyledTableRow key={data.id}>
+
+                  <DataRow data={data.contentId} handleDeleteReport={handleDeleteReport} handleDeleteContent={handleDeleteContent} reportDesc={data.reportDesc} reportId={data.id}/>
+                  
+                </StyledTableRow>
+              ))]}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div> */}
+      
     </div>
   )
 }

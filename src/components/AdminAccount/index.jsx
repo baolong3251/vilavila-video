@@ -32,6 +32,7 @@ function AdminAccount() {
             displayName: snapshot.data().displayName,
             avatar: snapshot.data().avatar,
             follow: snapshot.data().follow,
+            email: snapshot.data().email,
           }])
         
           setSearchData(someArray)
@@ -61,7 +62,7 @@ function AdminAccount() {
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id, email) => {
     // deleteVideo(id)
     // deleteImage(id)
     // deleteComment(id)
@@ -74,7 +75,7 @@ function AdminAccount() {
         deleteComment(id),
         deleteContentStatus(id),
         deleteTiers(id),
-        handleAddDeleteLog(id),
+        handleAddDeleteLog(id, email),
         deleteAccount(id)
       ])
       setSearchData([])
@@ -102,14 +103,19 @@ function AdminAccount() {
     // }).catch((error) => {
     //   console.log(error)
     // });
+
+    
+    //fetch(`/adminAccount/${id}`, {method: 'DELETE'});
+  
   }
 
-  const handleAddDeleteLog = (id) => {
+  const handleAddDeleteLog = (id, email) => {
     var timestamp = new Date();
     firestore.collection("adminDeleteLog").add({
       userAdminUID: currentUser.id,
       deleteUserId: id,
       timestamp: timestamp,
+      email: email,
     })
   }
 

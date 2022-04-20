@@ -80,7 +80,8 @@ function DataRow(props) {
 
             if(dataArray[0].videoAdminUID){
                 firestore.collection("users").doc(dataArray[0].videoAdminUID).onSnapshot((snapshot) => {
-                    setChannel([...channel,{
+                    setChannel([{
+                        id: snapshot.id,
                         displayName: snapshot.data().displayName,
                         avatar: snapshot.data().avatar,
                     }])
@@ -89,7 +90,8 @@ function DataRow(props) {
 
             if(dataArray[0].imageAdminUID){
                 firestore.collection("users").doc(dataArray[0].imageAdminUID).onSnapshot((snapshot) => {
-                    setChannel([...channel,{
+                    setChannel([{
+                        id: snapshot.id,
                         displayName: snapshot.data().displayName,
                         avatar: snapshot.data().avatar,
                     }])
@@ -121,9 +123,10 @@ function DataRow(props) {
                     {dataArray.length > 0 && [dataArray[0].title]}
                 </Link>
             </StyledTableCell>
-            <StyledTableCell align="right">{props.data}</StyledTableCell>
-            <StyledTableCell align="right">{channel.length > 0 && [channel[0].displayName]}</StyledTableCell>
-            <StyledTableCell align="right">
+            <StyledTableCell align="center">{props.data}</StyledTableCell>
+            <StyledTableCell align="center">{props.reportDesc}</StyledTableCell>
+            <StyledTableCell align="center">{channel.length > 0 && [channel[0].displayName]}</StyledTableCell>
+            <StyledTableCell align="center">
                 <div  onClick={() => setStatShow(!statShow)} 
                     className='delete_button'>
                 Hủy báo cáo
@@ -142,9 +145,11 @@ function DataRow(props) {
                 </p>
                 <p>Hãy nhấn nút xác nhận để thực hiện thao tác, hoặc nhấn hủy để hủy bỏ thao tác</p>
                 <div className='button_flex'>
-                    <Button onClick={() => props.handleDeleteReport(props.data)}>
+                    {channel.length > 0 && dataArray.length > 0 && [
+                    <Button onClick={() => props.handleDeleteReport(props.data, props.reportId, channel[0].id, channel[0].displayName, dataArray[0].title)}>
                         Xác nhận
                     </Button>
+                    ]}
                     <Button onClick={() => setStatShow(!statShow)}>
                         Hủy
                     </Button>
@@ -160,11 +165,13 @@ function DataRow(props) {
                 </p>
                 <p>Hãy nhấn nút xác nhận để thực hiện thao tác, hoặc nhấn hủy để hủy bỏ thao tác</p>
                 <div className='button_flex'>
-                    <Button onClick={() => props.handleDeleteContent(props.data)}>
-                    Xác nhận
+                    {channel.length > 0 && dataArray.length > 0 && [
+                    <Button onClick={() => props.handleDeleteContent(props.data, props.reportId, channel[0].id, channel[0].displayName, dataArray[0].title)}>
+                        Xác nhận
                     </Button>
+                    ]}
                     <Button onClick={() => setStatShow2(!statShow2)}>
-                    Hủy
+                        Hủy
                     </Button>
                 </div>
                 </div>

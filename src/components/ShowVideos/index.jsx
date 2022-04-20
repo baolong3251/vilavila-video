@@ -3,10 +3,14 @@ import "./style_showVideos.scss"
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import { fetchVideosStart } from '../../redux/Videos/videos.actions';
+import { doc, updateDoc, increment } from "firebase/firestore";
 
 import VideoCard from '../VideoCard'
 import { firestore } from '../../firebase/utils';
 import LoadMore from '../Forms/LoadMore';
+
+import Image from "../../assets/16526305592141308214.png"
+import AdOnTop from '../DisplayAd/AdOnTop';
 
 const mapState = ({videosData, user}) => ({
     videos: videosData.videos,
@@ -21,6 +25,8 @@ function ShowVideos() {
     const { videos, currentUser } = useSelector(mapState)
     const [userInfo, setUserInfo] = useState([])
     const [pageSize, setPageSize] = useState(8)
+    const [dataForTagLog, setDataForTagLog] = useState([])
+    const [statGo, setStatGo] = useState(false)
 
     const { data, queryDoc, isLastPage } = videos
 
@@ -33,10 +39,58 @@ function ShowVideos() {
     }, [filterType])
 
     useEffect(() => {
-        dispatch(
-            fetchVideosStart({filterTypeTag, pageSize})
-        )
+        if(!filterType && filterTypeTag) {
+            dispatch(
+                fetchVideosStart({filterTypeTag, pageSize})
+            )
+            handleGetData()
+        }
+        
     }, [filterTypeTag])
+
+    const handleGetData = () => {
+        firestore.collection("tagLog").where("tag", "==", filterTypeTag).get().then(snapshot => {
+            setDataForTagLog(snapshot.docs.map(doc => ({
+                    id: doc.id, 
+                    tag: doc.data().tag,
+                })
+            ))
+        })
+
+        setStatGo(true)
+    }
+
+    useEffect(() => {
+        if(statGo) {
+            handleUpdateTrending()
+        }
+        
+    }, [dataForTagLog])
+
+    const handleUpdateTrending = () => {
+        var someArray = dataForTagLog
+        someArray = someArray.find(element => element.tag == filterTypeTag)
+        var date = new Date();
+        var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+        // var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+        if(someArray){
+            const tagRef = doc(firestore, "tagLog", someArray.id);
+
+            // Atomically increment the population of the city by 50.
+            updateDoc(tagRef, {
+                NumOfInteractions: increment(1)
+            });
+        } else {
+            firestore.collection("tagLog").add({
+                
+                tag: filterTypeTag,
+                NumOfInteractions: 1,
+                lastUpdate: firstDay,
+                    
+            })
+        }
+    }
 
     // useEffect(() => {
     //     if(currentUser) {
@@ -89,40 +143,50 @@ function ShowVideos() {
     }
 
     return (
-        <div className='container_video'>
-            <div className='upper'>
-                <h2 className='label_video_type'>
-                    {filterTypeTag || filterType ? "Kết quả tìm kiếm cho " : "Tất cả video"}
-                    {filterTypeTag ? filterTypeTag : filterType}
-                </h2>
-                <div className='layout_video'>
-
-                    {data.map((video, pos) => {
-                        const { thumbnail, title, views, likes, privacy, sourceLink, desc, createdDate, videoAdminUID, documentID } = video
-                        if ( !title || 
-                            typeof views === 'undefined') return null
-
-                        const configVideo = {
-                            ...video
-                        }
-                        
-                        return(
-                            
-                            <VideoCard 
-                                {...configVideo}
-                            />
-                            
-                        )
-                    })}
-                    
-
-                </div>
-
-                {!isLastPage && (
-                    <LoadMore {...configLoadMore} />
-                )}
+        <>
+            <div className='showVideos_ad'>
+                <AdOnTop
+                    Image={Image}
+                    Link="https://gamersupps.gg/?afmc=213&cmp_id=15872452240&adg_id=131805543003&kwd=&device=c&gclid=CjwKCAjw3cSSBhBGEiwAVII0Z-7utscsbxqYYMa4h3QCALZ_DkChfECxDVhp-K8eNBP0MTEPUvzBFxoCUIAQAvD_BwE"
+                />
             </div>
-        </div>
+
+            <div className='container_video'>
+                
+                <div className='upper'>
+                    <h2 className='label_video_type'>
+                        {filterTypeTag || filterType ? "Kết quả tìm kiếm cho " : "Tất cả video"}
+                        {filterTypeTag ? filterTypeTag : filterType}
+                    </h2>
+                    <div className='layout_video'>
+
+                        {data.map((video, pos) => {
+                            const { thumbnail, title, views, likes, privacy, sourceLink, desc, createdDate, videoAdminUID, documentID } = video
+                            if ( !title || 
+                                typeof views === 'undefined') return null
+
+                            const configVideo = {
+                                ...video
+                            }
+                            
+                            return(
+                                
+                                <VideoCard 
+                                    {...configVideo}
+                                />
+                                
+                            )
+                        })}
+                        
+
+                    </div>
+
+                    {!isLastPage && (
+                        <LoadMore {...configLoadMore} />
+                    )}
+                </div>
+            </div>
+        </>
     )
 }
 

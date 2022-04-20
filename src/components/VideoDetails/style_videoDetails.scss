@@ -447,6 +447,10 @@
                         cursor: pointer;
                         .video-player-inner{
                             width: 204px;
+                            height: 114.75px;
+                            display: flex;
+                            border-radius: 8px;
+                            background-color: rgba(0,0,0,0.5);
                         
                             .react-player-inner{
                                 width: 204px;
@@ -456,21 +460,27 @@
                             }
 
                             img{
-                                max-width: 204px;;
+                                max-width: 204px;
+                                height: 100%;
                                 background-color: #f5f5f5;
                                 margin: auto;
                                 border-radius: 8px;
                             }
                         }
 
-                        .popUpWhenLike_item_topInnerInfo{
-                            overflow: hidden;
-                            white-space: nowrap;
-                            display: block;
-                            text-overflow: ellipsis;
-                            width: calc(90%);
-                            font-size: 15px;
+                        a{
+                            color: black;
+                            .popUpWhenLike_item_topInnerInfo{
+                                overflow: hidden;
+                                white-space: nowrap;
+                                display: block;
+                                text-overflow: ellipsis;
+                                width: calc(70%);
+                                font-size: 15px;
+                            }
                         }
+
+                        
                     }
                 }
                 .popUpWhenLike_item_bottom{
@@ -491,6 +501,7 @@
 
                         .popUpWhenLike_item_bottomChannelText{
                             margin-left: 10px;
+                            color: black;
                         }
                     }
 
@@ -514,6 +525,25 @@
     .active{
         visibility: visible;
         bottom: 0px;
+    }
+
+    //THIS THING FOR ADS
+    .videoDetails_bottomAd{
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .modal{
+        a{
+            color: white;
+            text-decoration: underline;
+        }
+    }
+
+    .MuiTypography-body1 {
+        font-size: 1.5rem;
+        
     }
 }
 

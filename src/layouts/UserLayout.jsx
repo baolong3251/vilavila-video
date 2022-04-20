@@ -53,6 +53,33 @@ const AdminLayout = props => {
                                     </li> : null 
                                 : null
                             }
+                            {currentUser ?
+                                currentUser.id == userID ? 
+                                    <li>
+                                        <Link to={`/user/liked/${userID}`}>
+                                            Nội dung đã thích
+                                        </Link>
+                                    </li> : null 
+                                : null
+                            }
+                            {currentUser ?
+                                currentUser.id == userID ? 
+                                    <li>
+                                        <Link to={`/user/saved/${userID}`}>
+                                            Nội dung đã lưu
+                                        </Link>
+                                    </li> : null 
+                                : null
+                            }
+                            {currentUser ?
+                                currentUser.id == userID ? 
+                                    <li>
+                                        <Link to={`/user/private/${userID}`}>
+                                            Riêng tư
+                                        </Link>
+                                    </li> : null 
+                                : null
+                            }
 
                             {/* <li>
                                 <span className="signOut" onClick={() => signOut()}>

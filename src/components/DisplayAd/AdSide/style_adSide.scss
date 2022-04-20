@@ -1,0 +1,27 @@
+.adSide{
+    margin: 0;
+
+    .adSide_adCard{
+    
+        
+        margin: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        
+        .adSide_adCard_img{
+            a{
+                height: 50%;
+                width: 70%;
+                display: flex;
+                justify-content: center;
+                margin: auto;
+                img{
+                    width: 100%;
+                    height: 100%;
+                    margin: auto;
+                }
+            }
+        }
+    }
+}

@@ -174,7 +174,7 @@ function HorizontalImageCard(props) {
                         <p>{channel.length > 0 ? channel[0].displayName : null}</p>
                     </Link>
                     <p>
-                        {moment(props.image.createdDate.toDate()).locale('vi').fromNow()}
+                        {props.image.createdDate ? moment(props.image.createdDate.toDate()).locale('vi').fromNow() : null}
                     </p>
                 </div>
             </div>

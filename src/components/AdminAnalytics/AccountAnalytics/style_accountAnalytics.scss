@@ -1,0 +1,54 @@
+.accountAnalytics{
+    .accountAnalytics_top{
+        span{
+            margin: 5px;
+            background-color: rgba(75, 192, 192, 0.2);
+            border-radius: 5px;
+            padding: 5px;
+            cursor: pointer;
+        }
+    }
+
+    .accountAnalytics_bottom{
+        
+        .accountAnalytics_bottom_label{
+            margin: 5px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #808080;
+
+            span{
+                margin-left: 10px;
+                cursor: pointer;
+                text-decoration: underline;
+            }
+        }
+
+        .accountAnalytics_bottom_container{
+            padding: 10px;
+    
+            &:nth-child(even) {
+                background-color: #e3e3e3;
+            }
+    
+            .accountAnalytics_bottom_item{
+                padding: 10px;
+                line-height: 1.3;
+            }
+    
+            .button{
+                background-color: #1abc9c;
+                padding: 10px;
+                width: 15%;
+                border-radius: 4px;
+                margin-left: 10px;
+                color: white;
+                cursor: pointer;
+                text-align: center;
+            }
+        }
+        
+    }
+}

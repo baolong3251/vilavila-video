@@ -1,28 +1,124 @@
 .point{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
+    text-align: center;
+
+
+    .tableShow{
+        position: fixed;
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        z-index: 5;
+        width: 40%;
+        
+        
+        padding: 10px;
+        left: -1000px;
+        top: 200px;
+        
+        box-shadow: 0 0 5px -1px rgb(170, 170, 170);
+        padding: 16px 0px;
+        transition: 0.5s;
+        visibility: hidden;
+        
+        h2{
+            color: white;
+            padding: 10px;
+            border-bottom: 2px solid #5bccb5;
+        }
+
+        p{
+            text-align: left;
+            padding: 5px
+        }
+
+        .button_flex{
+            display: flex;
+            justify-content: center;
+            button{
+                width: 30%;
+                margin: 10px;
+            }
+        }
+    }
+
+    .active{
+        visibility: visible;
+        left: 35px;
+    }
+
+    .tableShow2{
+        position: fixed;
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        z-index: 5;
+        width: 40%;
+        
+        
+        padding: 10px;
+        right: -1000px;
+        top: 200px;
+        
+        box-shadow: 0 0 5px -1px rgb(170, 170, 170);
+        padding: 16px 0px;
+        transition: 0.5s;
+        visibility: hidden;
+        
+        h2{
+            color: white;
+            padding: 10px;
+            border-bottom: 2px solid #5bccb5;
+        }
+
+        p{
+            text-align: left;
+            padding: 5px
+        }
+
+        .button_flex{
+            display: flex;
+            justify-content: center;
+            button{
+                width: 30%;
+                margin: 10px;
+            }
+        }
+    }
+
+    .active2{
+        visibility: visible;
+        right: 35px;
+    }
 }
 
 .title{
-    margin-bottom: 50px!important;
-    margin-top: 50px!important;
+    // margin-bottom: 50px!important;
+    margin-top: 30px!important;
     font-weight: 700;
     font-size: 30px;
     border-bottom: 2px solid #4bdfc1;
+}
+
+.leftSide{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+p{
+    margin-bottom: 10px;
 }
 
 .leftSide_item{
     background-color: #333333;
     padding-bottom: 0;
     color: white;
-    margin-bottom: 50px!important;
-    margin-top: 50px!important;
+    // margin-bottom: 50px!important;
+    // margin-top: 50px!important;
     box-shadow: 4px 3px 0px #54e2c6;
     width: 300px;
     text-align: center;
     cursor: pointer;
     padding: 10px;
+    margin: 10px;
     
     h2{
         text-align: center;

@@ -25,6 +25,21 @@
     }
 }
 
+.displaySearch_ad{
+    width: 100%;
+
+    .adCard{
+        height: auto;
+
+        .adCard_img{
+            a{
+                width: 100%;
+            }
+
+        }
+    }
+}
+
 .userVideos-videoCard:hover{
     .userVideos-videoCard-edit-option{
         display: flex!important;
