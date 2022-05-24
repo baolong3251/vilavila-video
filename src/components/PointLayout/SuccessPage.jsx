@@ -28,7 +28,7 @@ function SuccessPage() {
             </p>
 
             <p className="">
-                Thông tin giao dịch vẫn sẽ được ghi nhận lại, mọi thắc mắc xin liên hệ
+                Mọi thắc mắc xin liên hệ
                 với admin.
             </p>
         </div>

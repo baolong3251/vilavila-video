@@ -102,7 +102,7 @@ function Header() {
                     <ul>
                         <li className='header_optionLeft_icon'>
                             <Link to={`/`}>
-                                VilaVila-Video
+                                VilaVila-Videos
                             </Link>
                         </li>
                         

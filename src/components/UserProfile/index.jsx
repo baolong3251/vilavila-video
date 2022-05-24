@@ -9,6 +9,7 @@ import Button from '../Forms/Button';
 import FormInput from '../Forms/FormInput';
 import { deleteObject } from 'firebase/storage';
 import {arrayUnion, arrayRemove} from "firebase/firestore"
+import { Link } from 'react-router-dom';
 
 const mapState = ({ user }) => ({
   currentUser: user.currentUser
@@ -289,7 +290,7 @@ const UserProfile = props => {
 
         <li>
           <span className="follow">
-            {userInfo ? userInfo.follow.length : null} lượt theo dõi {currentUser ? 
+            <Link to={`/user/follower/${userID}`}>{userInfo ? userInfo.follow.length : null} lượt theo dõi</Link> {currentUser ? 
               <span onClick={() => handleFollow()} className="followButton">
                 {!follow ? "+ Theo dõi" : "- Bỏ theo dõi"}
               </span>

@@ -9,7 +9,7 @@ import FormModal from '../FormModal';
 import FormInput from '../Forms/FormInput';
 import FormTextArea from '../Forms/FormTextArea';
 import { firestore } from '../../firebase/utils';
-import { doc, arrayUnion, arrayRemove, updateDoc} from "firebase/firestore"; 
+import { doc, arrayUnion, arrayRemove, updateDoc, increment} from "firebase/firestore"; 
 
 const mapState = (state) => ({ //this thing can happen if use redux
     currentUser: state.user.currentUser,
@@ -45,12 +45,16 @@ function UserTierTables(props) {
     useEffect(() => {
         if(currentUser) {
             firestore.collection("users").doc(currentUser.id).onSnapshot((snapshot) => {
-                setUserInfo([{
-                    userId: snapshot.id,
-                    displayName: snapshot.data().displayName,
-                    thumbnail: snapshot.data().thumbnail,
-                    point: snapshot.data().point,
-                }])
+                try {
+                    setUserInfo([{
+                        userId: snapshot.id,
+                        displayName: snapshot.data().displayName,
+                        thumbnail: snapshot.data().thumbnail,
+                        point: snapshot.data().point,
+                    }])
+                } catch (error) {
+                    
+                }
             })
         }
     },[currentUser])
@@ -326,7 +330,7 @@ function UserTierTables(props) {
                 if(props.tier.tier == "tier1"){
                     if(tierUserSignedNum > 1)
                         {
-                            alert("Bạn đã đăng ký tier lớn hơn trước đó rồi...")
+                            alert("Bạn đã đăng ký cấp bậc lớn hơn trước đó rồi...")
                             
                             return
                             
@@ -336,7 +340,7 @@ function UserTierTables(props) {
                 if(props.tier.tier == "tier2"){
                     if(tierUserSignedNum > 2)
                         {
-                            alert("Bạn đã đăng ký tier lớn hơn trước đó rồi...")
+                            alert("Bạn đã đăng ký cấp bậc lớn hơn trước đó rồi...")
                             
                             return
                         }
@@ -346,7 +350,7 @@ function UserTierTables(props) {
                 if(props.tier.tier == "tier3"){
                     if(tierUserSignedNum > 3)
                     {
-                        alert("Bạn đã đăng ký tier lớn hơn trước đó rồi...")
+                        alert("Bạn đã đăng ký cấp bậc lớn hơn trước đó rồi...")
                         return
                     }
                         handleIfTier3()
@@ -355,7 +359,7 @@ function UserTierTables(props) {
                 if(props.tier.tier == "tier4"){
                     if(tierUserSignedNum > 4)
                         {
-                            alert("Bạn đã đăng ký tier lớn hơn trước đó rồi...")
+                            alert("Bạn đã đăng ký cấp bậc lớn hơn trước đó rồi...")
                             
                             return
                             
@@ -370,25 +374,25 @@ function UserTierTables(props) {
                 
                 var today = new Date();
                 var pointThing = props.tier.cost*1
-                var currentUserPoint = userInfo[0].point
-                currentUserPoint = currentUserPoint - pointThing
-                var userOfTierPoint = channelPoint*1
-                userOfTierPoint = userOfTierPoint + pointThing
-                userOfTierPoint = userOfTierPoint.toString()
-                currentUserPoint = currentUserPoint.toString()
+                // var currentUserPoint = userInfo[0].point
+                // currentUserPoint = currentUserPoint - pointThing
+                // var userOfTierPoint = channelPoint*1
+                // userOfTierPoint = userOfTierPoint + pointThing
+                // userOfTierPoint = userOfTierPoint.toString()
+                // currentUserPoint = currentUserPoint.toString()
                 var someArray = props.tier.userSigned
                 if(!someArray) someArray = arraySigned
                 var count = someArray.push(currentUser.id);
                 firestore.collection("tiers").doc(props.tier.id).set({
-                    userSigned: someArray,
+                    userSigned: arrayUnion(currentUser.id),
                 }, { merge: true }).then(
                     
                     firestore.collection("users").doc(userInfo[0].userId).set({
-                        point: currentUserPoint,
+                        point: increment(-pointThing),
                     }, { merge: true }),
 
                     firestore.collection("users").doc(props.tier.uid).set({
-                        point: userOfTierPoint,
+                        point: increment(pointThing),
                     }, { merge: true }),
 
                     firestore.collection('tierLog').where('uid', '==', props.tier.uid).where('signedUserId', '==', userInfo[0].userId).get().then(
@@ -431,7 +435,7 @@ function UserTierTables(props) {
         <div className='userDetails_tierOption'>
             
             <h2>
-                {props.tier.tier}
+                Cấp bậc {props.tier.tier.slice(4)}
             </h2>
             <p>
                 {new Intl.NumberFormat().format(props.tier.cost)} điểm
@@ -472,7 +476,7 @@ function UserTierTables(props) {
                                 Xác nhận
                             </h2>
                             <p>
-                                Bạn chắc chắn là muốn đăng ký tier này chứ?
+                                Bạn chắc chắn là muốn đăng ký cấp bậc này chứ?
                             </p>
                             <div className='flex-thing'>
                                 <Button onClick={() => toggleModal3()}>
@@ -490,10 +494,10 @@ function UserTierTables(props) {
                                 Xác nhận
                             </h2>
                             <p>
-                                Bạn chắc chắn là muốn hủy bỏ đăng ký tier này chứ?
+                                Bạn chắc chắn là muốn hủy bỏ đăng ký cấp bậc này chứ?
                             </p>
                             <p>
-                                Lưu ý: bạn sẽ không được hoàn tiền nếu như hủy đăng ký này...
+                                Lưu ý: bạn sẽ không được hoàn điểm nếu như hủy đăng ký này...
                             </p>
                             <div className='flex-thing'>
                                 <Button onClick={() => toggleModal4()}>
@@ -511,7 +515,7 @@ function UserTierTables(props) {
             {currentUser && currentUser.id == props.tier.uid && [<>
             <FormModal hideModal={hideModal2} toggleModal={toggleModal2}>
                 <h2>
-                    Sửa {props.tier.tier}
+                    Sửa cấp bậc {props.tier.tier.slice(4)}
                 </h2>
                 <FormInput 
                     type="number"
@@ -538,7 +542,7 @@ function UserTierTables(props) {
                     Xác nhận
                 </h2>
                 <p>
-                    Bạn chắc chắn là sẽ xóa tier này chứ?
+                    Bạn chắc chắn là sẽ xóa cấp bậc này chứ?
                 </p>
                 <div className='flex-thing'>
                     <Button onClick={() => toggleModal()}>

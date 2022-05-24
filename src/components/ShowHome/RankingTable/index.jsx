@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { firestore } from '../../../firebase/utils'
 import TrendingVideo from '../TrendingVideo'
-import moment from 'moment'
+import moment from "moment-timezone"
 import 'moment/locale/vi';
 
 function RankingTable() {
     const [dataTagLog, setDataTagLog] = useState([])
 
     useEffect(() => {
-        firestore.collection('tagLog').orderBy("NumOfInteractions", "desc").get().then((snapshot) => {
+        firestore.collection('tagLog').orderBy("NumOfInteractions", "desc").where("contentType", "==", "video").get().then((snapshot) => {
             setDataTagLog(snapshot.docs.map(doc => ({
                 id: doc.id, 
                 tag: doc.data().tag, 
@@ -23,15 +23,26 @@ function RankingTable() {
     useEffect(() => {
         if(dataTagLog.length > 0) {
             var date = new Date();
+            // var firstDayNextMonth = new Date(date.getFullYear(), date.getMonth()+1, 1);
             var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
             dataTagLog.map(dat => {
                 var time = moment(dat.lastUpdate.toDate()).locale('vi').fromNow()
+                var time2 = moment(dat.lastUpdate.toDate()).locale('vi').format("M")
+                var time3 = moment(date).locale('vi').format("M")
+                
                 if(time == "một tháng trước"){
                     firestore.collection('tagLog').doc(dat.id).set({
                         NumOfInteractions: 0,
+                        lastUpdate: date,
+                    }, {merge: true})
+                }
+
+                if(time2 !== time3){
+                    firestore.collection('tagLog').doc(dat.id).set({
                         lastUpdate: firstDay,
                     }, {merge: true})
                 }
+
             })
         }
     }, [dataTagLog])
@@ -60,11 +71,11 @@ function RankingTable() {
                 </div>
             </div>
 
-            {dataTagLog.length > 0 ? 
+            {dataTagLog.length > 1 ? 
                 <TrendingVideo dataTagLog={dataTagLog[1].tag} />
             : null}
 
-            {dataTagLog.length > 0 ? 
+            {dataTagLog.length > 2 ? 
                 <TrendingVideo dataTagLog={dataTagLog[2].tag} />
             : null}
         </>

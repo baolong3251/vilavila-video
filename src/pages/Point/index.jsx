@@ -66,28 +66,30 @@ function Point() {
       }
 
       if(userInfo[0].abilityAdsBlock && userInfo[0].abilityAdsBlock == "false"){
-        const docz = doc(firestore, "users", userId);
+        // const docz = doc(firestore, "users", userId);
 
-        // Atomically increment the population of the city by 50.
-        updateDoc(docz, {
-            point: increment(-20000)
-        });
+        // // Atomically increment the population of the city by 50.
+        // updateDoc(docz, {
+        //     point: increment(-20000)
+        // });
 
         firestore.collection("users").doc(userId).set({
+          point: increment(-20000),
           abilityAdsBlock: "true",
           adsBlockActiveDay: time,
         }, {merge: true})
       }
 
       if(!userInfo[0].abilityAdsBlock){
-        const docz = doc(firestore, "users", userId);
+        // const docz = doc(firestore, "users", userId);
 
-        // Atomically increment the population of the city by 50.
-        updateDoc(docz, {
-            point: increment(-20000)
-        });
+        // // Atomically increment the population of the city by 50.
+        // updateDoc(docz, {
+        //     point: increment(-20000)
+        // });
 
         firestore.collection("users").doc(userId).set({
+          point: increment(-20000),
           abilityAdsBlock: "true",
           adsBlockActiveDay: time,
         }, {merge: true})
@@ -119,28 +121,30 @@ function Point() {
       }
 
       if(userInfo[0].abilityShowMore && userInfo[0].abilityShowMore == "false"){
-        const docz = doc(firestore, "users", userId);
+        // const docz = doc(firestore, "users", userId);
 
-        // Atomically increment the population of the city by 50.
-        updateDoc(docz, {
-            point: increment(-50000)
-        });
+        // // Atomically increment the population of the city by 50.
+        // updateDoc(docz, {
+        //     point: increment(-50000)
+        // });
 
         firestore.collection("users").doc(userId).set({
+          point: increment(-50000),
           abilityShowMore: "true",
           showMoreActiveDay: time,
         }, {merge: true})
       }
 
       if(!userInfo[0].abilityShowMore){
-        const docz = doc(firestore, "users", userId);
+        // const docz = doc(firestore, "users", userId);
 
-        // Atomically increment the population of the city by 50.
-        updateDoc(docz, {
-            point: increment(-50000)
-        });
+        // // Atomically increment the population of the city by 50.
+        // updateDoc(docz, {
+        //     point: increment(-50000)
+        // });
 
         firestore.collection("users").doc(userId).set({
+          point: increment(-50000),
           abilityShowMore: "true",
           showMoreActiveDay: time,
         }, {merge: true})

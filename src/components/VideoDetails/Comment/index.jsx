@@ -24,14 +24,20 @@ function Comment() {
     useEffect(() => {
         const q = query(collection(firestore, "comments"), where("replyId", "in", ["", "true"]), where("videoId", "==", videoID), orderBy('timestamp', 'desc'));
         onSnapshot(q, (snapshot) => {
-            setComments(snapshot.docs.map(doc => ({
-                cmid: doc.id, 
-                videoId: doc.data().videoId, 
-                comment: doc.data().comment, 
-                uid: doc.data().uid,
-                replyId: doc.data().replyId,
-                time: doc.data().timestamp
-            })))
+            try{
+                setComments(snapshot.docs.map(doc => ({
+                    
+                    cmid: doc.id, 
+                    videoId: doc.data().videoId, 
+                    comment: doc.data().comment, 
+                    uid: doc.data().uid,
+                    replyId: doc.data().replyId,
+                    time: doc.data().timestamp
+                    
+                })))
+            } catch(error) {
+
+            }
         })
     }, [videoID])
 

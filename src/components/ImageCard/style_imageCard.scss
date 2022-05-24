@@ -1,7 +1,7 @@
 .imageCard{
     margin-bottom: 40px;
     max-width: 250px;
-    min-width: 25%;
+    min-width: 20%;
     align-content: flex-start;
     margin: 10px;
 
@@ -34,10 +34,19 @@
         padding-right: 30px;
     }
 
+    .imageCard_info2_title{
+        overflow: hidden;
+        white-space: nowrap;
+        display: block; /* for inline elements e.g. span, strong, em etc */
+        text-overflow: ellipsis;
+        width: calc(95%); /* The trick is here! */
+    }
+
     .imageCard_info2{
         display: flex;
         align-items: center;
         padding-right: 30px;
+        height: 42px;
 
         .imageCard_text2{
             margin-left: 10px;

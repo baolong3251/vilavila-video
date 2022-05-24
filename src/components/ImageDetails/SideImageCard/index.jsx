@@ -17,7 +17,7 @@ function SideImageCard(props) {
     useEffect(() => {
         if(props.imageAdminId){
 
-            let ref = firestore.collection("images").where("imageAdminUID", "==", props.imageAdminId).where("privacy", "==", "public").orderBy("createdDate", "desc")
+            let ref = firestore.collection("images").where("imageAdminUID", "==", props.imageAdminId).where("tier", "==", "").where("privacy", "==", "public").orderBy("createdDate", "desc")
             
             ref.get().then(
                 (snapshot) => {

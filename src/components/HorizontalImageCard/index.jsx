@@ -114,23 +114,34 @@ function HorizontalImageCard(props) {
     return (
         <div className='horizontalImageCard userImages-imageCard'>
 
-            {props.image.tier !== "" ? 
+{ 
+            props.image.tier !== "" ? 
+            currentUser ? currentUser.id !== props.image.imageAdminUID ?
             tiers ?
-                 props.image.tier !== tiers[0].tier ?
+                tiers.length !== 0 ?
+                 props.image.tier > tiers[0].tier ?
                 <div className='tier-thing'>
-                    {props.image.tier}
+                    Cấp bậc {props.image.tier.slice(4)}
                 </div> : null
-            :   <div className='tier-thing'>
-                    {props.image.tier}
-                </div>
+                :   <div className='tier-thing'>
+                        Cấp bậc {props.image.tier.slice(4)}
+                    </div> 
+            : <div className='tier-thing'>
+                Cấp bậc {props.image.tier.slice(4)}
+            </div>
             : null
+            : <div className='tier-thing'>
+                Cấp bậc {props.image.tier.slice(4)}
+            </div>
+            : null
+            
             }
 
             <Link to={
-                props.image.tier == "" ? `/image/${props.image.id}` : 
-                tiers ? props.image.tier !== tiers[0].tier ? 
+                props.image.tier == "" ? `/image/${props.image.id}` : currentUser ? currentUser.id !== props.image.imageAdminUID ?
+                tiers ? tiers.length !== 0 ? props.image.tier > tiers[0].tier ? 
                 `../${props.image.imageAdminUID}` : `/image/${props.image.id}` :
-                `../${props.image.imageAdminUID}`} 
+                `../${props.image.imageAdminUID}` : `../${props.image.imageAdminUID}` : `/image/${props.image.id}` : `../${props.image.imageAdminUID}`} 
                 className='horizontalImageCard_imageCardsThumbnail'>
     
                 <div className='thing'>
@@ -155,19 +166,19 @@ function HorizontalImageCard(props) {
             </Link>
             <div className='horizontalImageCard_imageCardsInfo'>
                 <div className="horizontalImageCard_text">
-                    <Link to={props.image.tier == "" ? `/image/${props.image.id}` : 
-                            tiers ? props.image.tier !== tiers[0].tier ? 
+                    <Link to={props.image.tier == "" ? `/image/${props.image.id}` : currentUser ? currentUser.id !== props.image.imageAdminUID ?
+                            tiers ? tiers.length !== 0 ? props.image.tier > tiers[0].tier ? 
                             `../${props.image.imageAdminUID}` : `/image/${props.image.id}` :
-                            `../${props.image.imageAdminUID}`}>
-                        <h4>{props.image.title}</h4>
+                            `../${props.image.imageAdminUID}` : `../${props.image.imageAdminUID}` : `/image/${props.image.id}` : `../${props.image.imageAdminUID}`}>
+                        <h4>{props.image.title == "" && props.image.privacy == "not-done" ? "Chưa có tựa đề" : props.image.title}</h4>
                     </Link>
 
-                    <Link to={props.image.tier == "" ? `/image/${props.image.id}` : 
-                                tiers ? props.image.tier !== tiers[0].tier ? 
-                                `../${props.image.imageAdminUID}` : `/image/${props.image.id}` :
-                                `../${props.image.imageAdminUID}`} 
+                    <Link to={props.image.tier == "" ? `/image/${props.image.id}` : currentUser ? currentUser.id !== props.image.imageAdminUID ?
+                            tiers ? tiers.length !== 0 ? props.image.tier > tiers[0].tier ? 
+                            `../${props.image.imageAdminUID}` : `/image/${props.image.id}` :
+                            `../${props.image.imageAdminUID}` : `../${props.image.imageAdminUID}` : `/image/${props.image.id}` : `../${props.image.imageAdminUID}`} 
                                 className="horizontalImageCard_desc">
-                        <p style={{whiteSpace: "pre-line"}}>{props.image.desc}</p>
+                        <p style={{whiteSpace: "pre-line"}}>{props.image.desc == "" && props.image.privacy == "not-done" ? "Phần mô tả chưa thiết lập" : props.image.desc}</p>
                     </Link>
                     
                     <Link to={`/user/${props.image.imageAdminUID}`}>
@@ -189,6 +200,11 @@ function HorizontalImageCard(props) {
                       <div onClick={() => toggleModal()} className='userImages-imageCard-edit-option-item'>
                           <DeleteForeverIcon className='icon' />
                       </div>
+                      {props.image.tier !== "" ? 
+                        <div className='userImages-imageCard-edit-option-item'>
+                            {props.image.tier.slice(4)}
+                        </div>
+                        : null}
                   </div>
                   
                   <AlertModal {...configModal}>

@@ -11,7 +11,7 @@ function AnimationVideo() {
     const [videosThing, setVideosThing] = useState([])
 
     useEffect(() => {
-        firestore.collection("videos").where("category", "==", "animation").limit(8).get().then(snapshot => {
+        firestore.collection("videos").where("category", "==", "animation").where("tier", "==", "").where("privacy", "==", "public").limit(8).get().then(snapshot => {
             setVideosThing(snapshot.docs.map(doc => ({
               documentID: doc.id, 
               title: doc.data().title, 

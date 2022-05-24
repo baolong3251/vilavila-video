@@ -10,7 +10,7 @@ function TrendingVideo(props) {
     const [videosThing, setVideosThing] = useState([])
 
     useEffect(() => {
-        firestore.collection("videos").where("tags", "array-contains", props.dataTagLog).limit(8).get().then(snapshot => {
+        firestore.collection("videos").where("tags", "array-contains", props.dataTagLog).where("tier", "==", "").where("privacy", "==", "public").orderBy("point", "asc").limit(8).get().then(snapshot => {
             setVideosThing(snapshot.docs.map(doc => ({
               documentID: doc.id, 
               title: doc.data().title, 

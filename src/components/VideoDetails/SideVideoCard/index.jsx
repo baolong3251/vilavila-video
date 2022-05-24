@@ -27,7 +27,7 @@ function SideVideoCard({category, tags}) {
             //     ))
             // })
 
-            let ref = firestore.collection("videos").orderBy("point", "desc").where("tier", "==", "").where("privacy", "==", "public")
+            let ref = firestore.collection("videos").orderBy("point", "asc").where("tier", "==", "").where("privacy", "==", "public")
 
             if(tags.length > 0) ref = ref.where("tags", "array-contains-any", tags)
             if(tags.length == 0) ref = ref.where("category", "==", category)
@@ -36,18 +36,22 @@ function SideVideoCard({category, tags}) {
             
             ref.get().then(
                 (snapshot) => {
-                    setVideos(snapshot.docs.map(doc => ({
-                        vid: doc.id, 
-                        title: doc.data().title, 
-                        sourceLink: doc.data().sourceLink, 
-                        privacy: doc.data().privacy,
-                        createdDate: doc.data().createdDate,
-                        tags: doc.data().tags,
-                        thumbnail: doc.data().thumbnail,
-                        videoAdminUID: doc.data().videoAdminUID,
-                        views: doc.data().views,
-                      })
-                    ))
+                    try {
+                        setVideos(snapshot.docs.map(doc => ({
+                            vid: doc.id, 
+                            title: doc.data().title, 
+                            sourceLink: doc.data().sourceLink, 
+                            privacy: doc.data().privacy,
+                            createdDate: doc.data().createdDate,
+                            tags: doc.data().tags,
+                            thumbnail: doc.data().thumbnail,
+                            videoAdminUID: doc.data().videoAdminUID,
+                            views: doc.data().views,
+                          })
+                        )) 
+                    } catch (error) {
+                        
+                    }
                 }
             )
         }

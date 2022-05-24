@@ -28,7 +28,7 @@ function PopUpContainer({ videoAdminId, tags, category, showContainer, id }) {
         // this thing will data from firestore
         if(category) {
             reset()
-            let ref = firestore.collection("videos")
+            let ref = firestore.collection("videos").orderBy("videoAdminUID").orderBy("point", "asc")
 
             if(tags.length > 0) ref = ref.where("tags", "array-contains-any", tags)
             if(tags.length == 0) ref = ref.where("category", "==", category)

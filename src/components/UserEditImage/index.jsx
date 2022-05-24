@@ -37,7 +37,7 @@ function UserEditImage() {
         if (currentUser && imageID && currentUser.id == userID && image.length == 0) {
             firestore.collection("images").doc(imageID).get().then((snapshot) => {
                 try {
-                    setImage([...image,{
+                    setImage([{
                         id: snapshot.id, 
                         title: snapshot.data().title,
                         privacy: snapshot.data().privacy,
@@ -53,7 +53,7 @@ function UserEditImage() {
                 }
             }) 
         }
-    }, [currentUser])
+    }, [imageID])
 
     useEffect(() => {
         if (currentUser && imageID && currentUser.id == userID && tiers.length == 0) {
@@ -67,7 +67,9 @@ function UserEditImage() {
                   })
                 ))
             })
-            
+        }
+
+        if(image.length > 0){
             writeInfo()
         }
     }, [image])
@@ -129,7 +131,7 @@ function UserEditImage() {
     )
 
     const writeInfo = () => {
-        if(image.length != 0) {
+        if(image.length !== 0) {
             setNewTitle(image[0].title)
             setNewDesc(image[0].desc)
             setTierChoice(image[0].tier)
@@ -340,11 +342,12 @@ function UserEditImage() {
                 <FormControl className='userImages-imageCard-radioBoxContainer' component="fieldset">
                     <label>Tier</label>
                     <RadioGroup className='userImages-imageCard-radioBox' aria-label="gender" name="gender1" value={tierChoice} onChange={handleChangeTierChoice}>
-                        <FormControlLabel disabled={tiers.find(item => item.tier == "tier1") ? null : "disabled"} value="tier1" control={<Radio />} label="Tier 1" />
-                        <FormControlLabel disabled={tiers.find(item => item.tier == "tier2") ? null : "disabled"} value="tier2" control={<Radio />} label="Tier 2" />
-                        <FormControlLabel disabled={tiers.find(item => item.tier == "tier3") ? null : "disabled"} value="tier3" control={<Radio />} label="Tier 3" />
-                        <FormControlLabel disabled={tiers.find(item => item.tier == "tier4") ? null : "disabled"} value="tier4" control={<Radio />} label="Tier 4" />
-                        <FormControlLabel disabled={tiers.find(item => item.tier == "tier5") ? null : "disabled"} value="tier5" control={<Radio />} label="Tier 5" />
+                        <FormControlLabel value="" control={<Radio />} label="Cấp bậc 0" />
+                        <FormControlLabel disabled={tiers.find(item => item.tier == "tier1") ? null : "disabled"} value="tier1" control={<Radio />} label="Cấp bậc 1" />
+                        <FormControlLabel disabled={tiers.find(item => item.tier == "tier2") ? null : "disabled"} value="tier2" control={<Radio />} label="Cấp bậc 2" />
+                        <FormControlLabel disabled={tiers.find(item => item.tier == "tier3") ? null : "disabled"} value="tier3" control={<Radio />} label="Cấp bậc 3" />
+                        <FormControlLabel disabled={tiers.find(item => item.tier == "tier4") ? null : "disabled"} value="tier4" control={<Radio />} label="Cấp bậc 4" />
+                        <FormControlLabel disabled={tiers.find(item => item.tier == "tier5") ? null : "disabled"} value="tier5" control={<Radio />} label="Cấp bậc 5" />
                     </RadioGroup>
                 </FormControl>
             </div>

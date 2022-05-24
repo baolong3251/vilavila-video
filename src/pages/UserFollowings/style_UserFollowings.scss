@@ -1,0 +1,33 @@
+.userFollowing{
+    .userFollowing-container{
+        
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+
+        &:nth-child(even) {
+            background-color: rgba(75, 192, 192, 0.2);
+        }
+
+        .userFollowing-showName{
+            display: flex;
+            align-items: center;
+            width: 300px;
+            
+
+            .userFollowing-showName-item{
+                margin: 10px;
+                
+                
+            }
+        }
+
+        .userFollowing-item{
+            margin: 10px;
+            width: 300px;
+            a{
+                color: #808080;
+            }
+        }
+    }
+}

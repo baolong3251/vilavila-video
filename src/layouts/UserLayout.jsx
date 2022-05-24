@@ -48,7 +48,7 @@ const AdminLayout = props => {
                                 currentUser.id == userID ? 
                                     <li>
                                         <Link to={`/user/tiers/${userID}`}>
-                                            Tiers
+                                            Cấp bậc
                                         </Link>
                                     </li> : null 
                                 : null

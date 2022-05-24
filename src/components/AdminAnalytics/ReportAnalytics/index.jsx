@@ -6,14 +6,20 @@ import moment from 'moment'
 import 'moment/locale/vi';
 import "./style_reportAnalytics.scss"
 import {CSVLink} from "react-csv"
+import FormInput from '../../Forms/FormInput'
 
 
 function ReportAnalytics() {
   const [data, setData] = useState([])
   const [yearInData, setYearInData] = useState([])
   const [dataForShow, setDataForShow] = useState([])
+  const [dataForDownload1, setDataForDownload1] = useState([])
   const [monthlyData, setMonthlyData] = useState([])
   const [currentYear, setCurrentYear] = useState('')
+  const [searchId, setSearchId] = useState("")
+  const [showNumber, setShowNumber] = useState(0)
+  const [showNumber1, setShowNumber1] = useState(0)
+  const [showNumber2, setShowNumber2] = useState(0)
 
   useEffect(() => {
     getData()
@@ -28,6 +34,7 @@ function ReportAnalytics() {
   useEffect(() => {
     if(dataForShow.length > 0){
       dataForEachMonth()
+      dataForDownload()
     }
   }, [dataForShow])
 
@@ -51,6 +58,7 @@ function ReportAnalytics() {
         time: doc.data().time,
         method: doc.data().method,
         contentName: doc.data().contentName,
+        userId: doc.data().userId,
         userName: doc.data().userName,
         contentId: doc.data().contentId,
       })))
@@ -69,6 +77,19 @@ function ReportAnalytics() {
     setMonthlyData(monthCountArr)
   }
 
+  const dataForDownload = () => {
+    var data = dataForShow
+    var data = data.map(x => ({
+      id: x.id, 
+      time: x.time.toDate(),
+      contentId: x.contentId,
+      contentName: x.contentName,
+      userName: x.userName,
+      method: x.method,
+    }))
+    setDataForDownload1(data) 
+  }
+
   const deleteAll = () => {
     dataForShow.map(data => {
       firestore.collection("reportLog").doc(data.id).delete()
@@ -76,6 +97,18 @@ function ReportAnalytics() {
     alert("Đã xóa!!!")
     getData()
   }
+
+  const onKeyDownHandler = e => {
+    if (e.keyCode === 13) {
+      var data = dataForShow
+      data = data.filter(x => x.userId == searchId)
+      var data1 = data.filter(x => x.method == "Hủy báo cáo")
+      var data2 = data.filter(x => x.method == "Xóa nội dung")
+      setShowNumber(data.length)
+      setShowNumber1(data1.length)
+      setShowNumber2(data2.length)
+    }
+  };
 
   const headers = [
     {label: 'ID', key: 'id'},
@@ -89,7 +122,7 @@ function ReportAnalytics() {
   const csvReport = {
     filename: `Report_${currentYear}.csv`,
     headers: headers,
-    data: dataForShow,
+    data: dataForDownload1,
   }
 
   console.log(monthlyData)
@@ -102,7 +135,7 @@ function ReportAnalytics() {
       <div className='reportAnalytics_top'>
         {yearInData.map(year => {
           return(
-            <span onClick={() => changeDataShow(moment(year.time.toDate()).locale('vi').format("YYYY"))}>
+            <span className={moment(year.time.toDate()).locale('vi').format("YYYY") == currentYear ? "color" : "not-color"} onClick={() => changeDataShow(moment(year.time.toDate()).locale('vi').format("YYYY"))}>
               {moment(year.time.toDate()).locale('vi').format("YYYY")}
             </span>
           )
@@ -156,6 +189,8 @@ function ReportAnalytics() {
                 {
                   ticks: {
                     beginAtZero: true,
+                    stepSize: 1,
+                    precision: 0,
                   },
                 },
               ],
@@ -172,6 +207,17 @@ function ReportAnalytics() {
           </span>
           <span>
             <CSVLink {...csvReport}>Download</CSVLink>
+          </span>
+          <span>
+            <input
+              type="text"
+              placeholder="Nhập id tài khoản"        
+              onKeyDown={onKeyDownHandler}
+              onChange={(e) => setSearchId(e.target.value)}
+            />
+          </span>
+          <span className='not-underLine'>
+            {showNumber > 0 ? "Số lần xuất hiện: " + showNumber + ", Hủy báo cáo: " + showNumber1 + ", Xóa nội dung: " + showNumber2 : null}
           </span>
         </div>
 

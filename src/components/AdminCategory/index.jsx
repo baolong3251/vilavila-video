@@ -134,8 +134,8 @@ function AdminCategory() {
             <TableHead>
               <TableRow>
                 <StyledTableCell>Tên thể loại</StyledTableCell>
-                <StyledTableCell align="right">Id thể loại</StyledTableCell>
-                <StyledTableCell align="right">Số nội dung sử dụng</StyledTableCell>
+                {/* <StyledTableCell align="right">Id thể loại</StyledTableCell> */}
+                <StyledTableCell align="left">Số nội dung sử dụng</StyledTableCell>
                 <StyledTableCell align="right"></StyledTableCell>
               </TableRow>
             </TableHead>
@@ -145,8 +145,8 @@ function AdminCategory() {
                   <StyledTableCell component="th" scope="row">
                     {row.name}
                   </StyledTableCell>
-                  <StyledTableCell align="right">{row.id}</StyledTableCell>
-                  <StyledTableCell align="right">{row.quantity}</StyledTableCell>
+                  {/* <StyledTableCell align="right">{row.id}</StyledTableCell> */}
+                  <StyledTableCell align="left">{row.quantity}</StyledTableCell>
                   <Alert row={row} handleDelete={handleDelete} />
                 </StyledTableRow>
               ))}

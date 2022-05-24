@@ -18,7 +18,7 @@ function UserImages() {
 
   useEffect(() => {
     
-    firestore.collection("images").where("imageAdminUID", "==", userID).where("privacy", "==", "public").onSnapshot((snapshot) => {
+    firestore.collection("images").where("imageAdminUID", "==", userID).orderBy("createdDate", "desc").where("privacy", "==", "public").onSnapshot((snapshot) => {
       try {
         setImages(snapshot.docs.map(doc => ({
           id: doc.id, 

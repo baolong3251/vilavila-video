@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import HorizontalImageCard from '../../components/HorizontalImageCard'
 import HorizontalVideoCard from '../../components/HorizontalVideoCard'
 import { firestore } from '../../firebase/utils'
@@ -118,6 +118,14 @@ function UserPrivateContents() {
 
     return (
         <div className='userPrivateContents'>
+            <div className='userPrivateContents_privateButton'>
+                <Link to={`/user/following/${userID}`}>
+                    <span>
+                        Đã theo dõi
+                    </span>
+                </Link>
+            </div>
+
             <div className="userPrivateContents_videos horizontalVideo">
                 <h2>Videos</h2>
                 {videos.length == 0 && [<p>Không có nội dung nào tại đây cả...</p>]}

@@ -50,6 +50,8 @@ import AdminEditRule from "./components/AdminEditRule";
 import Contact from "./pages/Contact";
 import ReportAnalytics from "./components/AdminAnalytics/ReportAnalytics";
 import AccountAnalytics from "./components/AdminAnalytics/AccountAnalytics";
+import UserFollowers from "./pages/UserFollowers";
+import UserFollowings from "./pages/UserFollowings";
 
 
 function App() {
@@ -286,11 +288,27 @@ function App() {
             </UserLayout>
           )}/>
 
+          {/* ====================USER DETIALS FOLLOWERS PAGE =================== */}
+          <Route exact path="/user/follower/:userID" render={() => ( ///:videoID
+            <UserLayout>
+              <UserFollowers />
+            </UserLayout>
+          )}/>
+
+          {/* ====================USER DETIALS FOLLOWERS PAGE =================== */}
+          <Route exact path="/user/following/:userID" render={() => ( ///:videoID
+            <UserLayout>
+              <UserFollowings />
+            </UserLayout>
+          )}/>
+
           {/* ==================== POINT PAGE =================== */}
           <Route exact path="/point/:userID" render={() => ( ///:videoID
-            <MainLayout>
-              <Point />
-            </MainLayout>
+            <WithAuth>
+              <MainLayout>
+                <Point />
+              </MainLayout>
+            </WithAuth>
           )}/>
 
           <Route exact path="/getPoint/:cost/:userID" render={() => ( ///:videoID

@@ -13,7 +13,7 @@ function ImageCard(props) {
   useEffect(() => {
     if (props.image.imageAdminUID && channel.length == 0) {
         firestore.collection("users").doc(props.image.imageAdminUID).onSnapshot((snapshot) => {
-            setChannel([...channel,{
+            setChannel([{
                 displayName: snapshot.data().displayName,
                 avatar: snapshot.data().avatar,
                 follow: snapshot.data().follow,

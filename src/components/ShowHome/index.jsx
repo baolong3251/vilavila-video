@@ -11,6 +11,8 @@ import RandomVideo from './RandomVideo'
 import HandleCheckTierLog from './HandleCheckTierLog'
 import ShowMoreVideos from './ShowMoreVideos'
 import HandleCheckAbility from './HandleCheckAbility'
+import RankingTableImg from './RankingTableImg'
+import ShowRequestUser from './ShowRequestUser'
 
 const mapState = ({user}) => ({
     currentUser: user.currentUser
@@ -24,6 +26,10 @@ function ShowHome() {
 
             {currentUser && [
                 <FollowingVideo />
+            ]}
+
+            {!currentUser && [
+                <ShowRequestUser />
             ]}
 
             <AdOnTop 
@@ -43,6 +49,8 @@ function ShowHome() {
             />
 
             <ImagesForHomePage />
+
+            <RankingTableImg />
 
             <AnimationVideo />
 

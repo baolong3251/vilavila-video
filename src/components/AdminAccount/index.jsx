@@ -9,6 +9,7 @@ import { getAuth, deleteUser } from "firebase/auth";
 import { deleteObject } from 'firebase/storage'
 import { useSelector } from 'react-redux'
 import Alert from './Alert'
+import AddPointAlert from './AddPointAlert'
 
 const mapState = state => ({
   currentUser: state.user.currentUser,
@@ -25,14 +26,15 @@ function AdminAccount() {
   const onKeyDownHandler = e => {
     if (e.keyCode === 13) {
       var someArray = []
-      firestore.collection("users").doc(searchId).get().then(snapshot => {
+      firestore.collection("users").doc(searchId).onSnapshot(snapshot => {
         try{
-          someArray = ([...someArray,{
+          someArray = ([{
             id: snapshot.id,
             displayName: snapshot.data().displayName,
             avatar: snapshot.data().avatar,
             follow: snapshot.data().follow,
             email: snapshot.data().email,
+            point: snapshot.data().point,
           }])
         
           setSearchData(someArray)
@@ -45,18 +47,20 @@ function AdminAccount() {
 
   const onKeyDownHandler2 = e => {
     if (e.keyCode === 13) {
-      firestore.collection("users").where("displayName", "==", searchDisplayName).get().then(snapshot => {
+      firestore.collection("users").where("displayName", "==", searchDisplayName).onSnapshot(snapshot => {
         try{
           setSearchData(snapshot.docs.map(doc => ({
             id: doc.id,
             displayName: doc.data().displayName,
             avatar: doc.data().avatar,
             follow: doc.data().follow,
+            email: doc.data().email,
+            point: doc.data().point,
             })
             
           ))
         } catch(err) {
-          
+          console.log(err)
         }
       })
     }
@@ -69,6 +73,7 @@ function AdminAccount() {
     // deleteContentStatus(id)
     // deleteAccount(id)
     try{
+      setSearchData([])
       let results = await Promise.all([
         deleteVideo(id), 
         deleteImage(id), 
@@ -78,7 +83,7 @@ function AdminAccount() {
         handleAddDeleteLog(id, email),
         deleteAccount(id)
       ])
-      setSearchData([])
+      
       return alert("Hoàn tất!!!!")
     } catch (err) {
 
@@ -352,8 +357,14 @@ function AdminAccount() {
                 {sd.displayName}
               </div>
             </div>
-            <div>
+            <div className='adminAccount_infoItem'>
               id: {sd.id}
+            </div>
+            <div className='adminAccount_infoItem'>
+              Email: {sd.email}
+            </div>
+            <div className='adminAccount_infoItem'>
+              Điểm: {new Intl.NumberFormat().format(sd.point)}
             </div>
             <div className="adminAccount_buttonContainer">
               
@@ -362,6 +373,8 @@ function AdminAccount() {
                   Xem trang cá nhân
                 </Link>
               </Button>
+
+              <AddPointAlert sd={sd} />
 
               <Alert sd={sd} handleDelete={handleDelete} />
               

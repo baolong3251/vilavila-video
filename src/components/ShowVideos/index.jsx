@@ -12,6 +12,9 @@ import LoadMore from '../Forms/LoadMore';
 import Image from "../../assets/16526305592141308214.png"
 import AdOnTop from '../DisplayAd/AdOnTop';
 
+import moment from "moment-timezone"
+import 'moment/locale/vi';
+
 const mapState = ({videosData, user}) => ({
     videos: videosData.videos,
     currentUser: user.currentUser
@@ -49,10 +52,11 @@ function ShowVideos() {
     }, [filterTypeTag])
 
     const handleGetData = () => {
-        firestore.collection("tagLog").where("tag", "==", filterTypeTag).get().then(snapshot => {
+        firestore.collection("tagLog").where("tag", "==", filterTypeTag).where("contentType", "==", "video").where("contentType", "==", "video").get().then(snapshot => {
             setDataForTagLog(snapshot.docs.map(doc => ({
                     id: doc.id, 
                     tag: doc.data().tag,
+                    lastUpdate: doc.data().lastUpdate,
                 })
             ))
         })
@@ -70,23 +74,30 @@ function ShowVideos() {
     const handleUpdateTrending = () => {
         var someArray = dataForTagLog
         someArray = someArray.find(element => element.tag == filterTypeTag)
+        
         var date = new Date();
         var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
         // var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
 
         if(someArray){
-            const tagRef = doc(firestore, "tagLog", someArray.id);
+            var newArr = someArray.lastUpdate
+            var time4 = moment(date).locale('vi').format("D")
+            var time5 = moment(newArr.toDate()).locale('vi').format("D")
+            if(time4 !== time5){
+                const tagRef = doc(firestore, "tagLog", someArray.id);
 
-            // Atomically increment the population of the city by 50.
-            updateDoc(tagRef, {
-                NumOfInteractions: increment(1)
-            });
+                updateDoc(tagRef, {
+                    NumOfInteractions: increment(1)
+                });
+            }
+
         } else {
             firestore.collection("tagLog").add({
                 
                 tag: filterTypeTag,
                 NumOfInteractions: 1,
                 lastUpdate: firstDay,
+                contentType: "video",
                     
             })
         }

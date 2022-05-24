@@ -1,0 +1,33 @@
+.userFollowers{
+    .userFollowers-container{
+        
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+
+        &:nth-child(even) {
+            background-color: rgba(75, 192, 192, 0.2);
+        }
+
+        .userFollowers-showName{
+            display: flex;
+            align-items: center;
+            width: 300px;
+            
+
+            .userFollowers-showName-item{
+                margin: 10px;
+                
+                
+            }
+        }
+
+        .userFollowers-item{
+            margin: 10px;
+            width: 300px;
+            a{
+                color: #808080;
+            }
+        }
+    }
+}

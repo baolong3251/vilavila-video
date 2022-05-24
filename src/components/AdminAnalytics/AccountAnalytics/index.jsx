@@ -12,6 +12,7 @@ function AccountAnalytics() {
   const [data, setData] = useState([])
   const [yearInData, setYearInData] = useState([])
   const [dataForShow, setDataForShow] = useState([])
+  const [dataForDownload1, setDataForDownload1] = useState([])
   const [monthlyData, setMonthlyData] = useState([])
   const [currentYear, setCurrentYear] = useState('')
 
@@ -28,6 +29,7 @@ function AccountAnalytics() {
   useEffect(() => {
     if(dataForShow.length > 0){
       dataForEachMonth()
+      dataForDownload()
     }
   }, [dataForShow])
 
@@ -68,6 +70,17 @@ function AccountAnalytics() {
     setMonthlyData(monthCountArr)
   }
 
+  const dataForDownload = () => {
+    var data = dataForShow
+    var data = data.map(x => ({
+      id: x.id, 
+      time: x.time.toDate(),
+      deleteUserId: x.deleteUserId,
+      userAdminUID: x.userAdminUID,
+      email: x.email}))
+    setDataForDownload1(data) 
+  }
+
   const deleteAll = () => {
     dataForShow.map(data => {
       firestore.collection("reportLog").doc(data.id).delete()
@@ -87,7 +100,7 @@ function AccountAnalytics() {
   const csvReport = {
     filename: `Account_${currentYear}.csv`,
     headers: headers,
-    data: dataForShow,
+    data: dataForDownload1,
   }
 
   console.log(monthlyData)
@@ -100,7 +113,7 @@ function AccountAnalytics() {
       <div className='accountAnalytics_top'>
         {yearInData.map(year => {
           return(
-            <span onClick={() => changeDataShow(moment(year.time.toDate()).locale('vi').format("YYYY"))}>
+            <span className={moment(year.time.toDate()).locale('vi').format("YYYY") == currentYear ? "color" : "not-color"} onClick={() => changeDataShow(moment(year.time.toDate()).locale('vi').format("YYYY"))}>
               {moment(year.time.toDate()).locale('vi').format("YYYY")}
             </span>
           )
@@ -124,7 +137,7 @@ function AccountAnalytics() {
                       'Tháng 12',
                     ],
             datasets: [{
-              label: 'Số báo cáo trong tháng',
+              label: 'Số tài khoản đã xử lý trong tháng',
               data: monthlyData,
               backgroundColor: [
                   'rgba(255, 99, 132, 0.2)',
@@ -154,6 +167,7 @@ function AccountAnalytics() {
                 {
                   ticks: {
                     beginAtZero: true,
+                    precision: 0,
                   },
                 },
               ],

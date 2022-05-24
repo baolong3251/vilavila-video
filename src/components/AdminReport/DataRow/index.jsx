@@ -118,14 +118,14 @@ function DataRow(props) {
             <StyledTableCell component="th" scope="row">
                 <Link to={dataArray.length > 0 ? dataArray[0].videoAdminUID ? `/video/${props.data}`
                         : `/image/${props.data}`
-                        : null}
+                        : null} target={"_blank"}
                 >
                     {dataArray.length > 0 && [dataArray[0].title]}
                 </Link>
             </StyledTableCell>
-            <StyledTableCell align="center">{props.data}</StyledTableCell>
-            <StyledTableCell align="center">{props.reportDesc}</StyledTableCell>
-            <StyledTableCell align="center">{channel.length > 0 && [channel[0].displayName]}</StyledTableCell>
+            {/* <StyledTableCell align="center">{props.data}</StyledTableCell> */}
+            <StyledTableCell align="center"><b>{props.reportDesc}</b></StyledTableCell>
+            <StyledTableCell align="center">{channel.length > 0 && [<Link to={`/user/${channel[0].id}`} target={"_blank"}>{channel[0].displayName}</Link>]}</StyledTableCell>
             <StyledTableCell align="center">
                 <div  onClick={() => setStatShow(!statShow)} 
                     className='delete_button'>

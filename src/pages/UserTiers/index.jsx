@@ -25,15 +25,19 @@ function UserTiers() {
   }
 
   useEffect(() => {
-    firestore.collection('tiers').where('uid', '==', userID).onSnapshot(snapshot => {
+    firestore.collection('tiers').where('uid', '==', userID).orderBy("tier").onSnapshot(snapshot => {
+      try {  
         setTiers(snapshot.docs.map(doc => ({
-          id: doc.id, 
-          uid: doc.data().uid,
-          tier: doc.data().tier,
-          cost: doc.data().cost,
-          desc: doc.data().desc,
-        })
-      ))
+            id: doc.id, 
+            uid: doc.data().uid,
+            tier: doc.data().tier,
+            cost: doc.data().cost,
+            desc: doc.data().desc,
+          })
+        ))
+      } catch (error) {
+          
+      }
     })
   }, [userID])
 
@@ -42,7 +46,7 @@ function UserTiers() {
     const found = someArray.find(element => element.tier == newTier);
 
     if(found) {
-      alert('Opps... có lỗi xảy ra, có vẻ như tier này đã được thêm vào trước đó rồi.')
+      alert('Opps... có lỗi xảy ra, có vẻ như cấp bậc này đã được thêm vào trước đó rồi.')
       return
     }
     var realCost = newTierPoint.toString()
@@ -67,25 +71,28 @@ function UserTiers() {
     <div>
         <div className="button-tier">
           <Button onClick={() => toggleModal()}>
-            Thêm tier
+            Thêm cấp bậc
           </Button>
         </div>
 
         <FormModal {...configModal}>
           <FormSelect 
-            label="Tiers"
+            label="Cấp bậc"
             options={[{
                 value: "tier1",
-                name: "Tier 1"
+                name: "Cấp bậc 1"
             }, {
                 value: "tier2",
-                name: "Tier 2"
+                name: "Cấp bậc 2"
             }, {
               value: "tier3",
-              name: "Tier 3"
+              name: "Cấp bậc 3"
             }, {
               value: "tier4",
-              name: "Tier 4"
+              name: "Cấp bậc 4"
+            }, {
+              value: "tier5",
+              name: "Cấp bậc 5"
             }]
           
             }

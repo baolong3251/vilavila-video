@@ -7,6 +7,10 @@
             padding: 5px;
             cursor: pointer;
         }
+
+        .color{
+            background-color: rgba(75, 192, 192, 0.6);
+        }
     }
 
     .reportAnalytics_bottom{
@@ -18,12 +22,32 @@
             font-size: 16px;
             font-weight: 700;
             color: #808080;
+            align-items: center;
 
             span{
                 margin-left: 10px;
                 cursor: pointer;
                 text-decoration: underline;
+            
+                input{
+                    outline: none;
+                    border: 1px solid #808080;
+                    font-weight: 700;
+                    color: #808080;
+                    width: 25%;
+                }
+
+                input:focus{
+                    border: 1px solid #808080;
+                    outline: none;
+                }
             }
+            
+            .not-underLine{
+                cursor: text;
+                text-decoration: none;
+            }
+            
         }
 
         .reportAnalytics_bottom_container{

@@ -151,8 +151,15 @@ function UploadVideo() {
     const handleChangeFileImage = (e) => {
         for (let i = 0; i < e.target.files.length; i++) {
             const newImage = e.target.files[i];
-            newImage["id"] = Math.random();
-            setImages((prevState) => [newImage])
+            var pattern = /image-*/;
+            if (!newImage.type.match(pattern)) {
+                alert('File không hợp lệ...');
+                e.target.value = null;
+                return;
+            } else {
+                newImage["id"] = Math.random();
+                setImages((prevState) => [newImage])
+            }
         }
     }
 
@@ -163,7 +170,7 @@ function UploadVideo() {
         deleteObject(desertRef).then(() => {
             setFileImageUrl('')
             updateFireStore(thumb)
-            alert('success')
+            alert('Đã xóa!!')
         }).catch((error) => {
             console.log(error)
         });
@@ -244,7 +251,7 @@ function UploadVideo() {
         const newVideo = e.target.files[i];
         var pattern = /video-*/;
         if (!newVideo.type.match(pattern)) {
-            alert('Invalid format');
+            alert('File không hợp lệ...');
             e.target.value = null;
             return;
         }

@@ -32,6 +32,8 @@ function ImageDetails() {
     const [channel, setChannel] = useState([])
     const [follow, setFollow] = useState(false)
     const [userInfo, setUserInfo] = useState([])
+    const [show, setShow] = useState(true)
+    const [tierThing, setTierThing] = useState([])
 
     const {
         createdDate,
@@ -40,9 +42,8 @@ function ImageDetails() {
         tags,
         title,
         imageAdminUID,
+        tier,
     } = image
-
-    console.log(sourceLink)
 
     useEffect(() => {
         dispatch(
@@ -96,9 +97,17 @@ function ImageDetails() {
     }, [currentUser])
 
     useEffect(() => {
-        if(channel.length > 0)
-        checkFollow()
+        if(channel.length > 0){
+            checkFollow()
+            getTierThing()
+        }
     }, [channel])
+
+    useEffect(() => {
+        if(tierThing.length > 0){
+            checkTierThing()
+        }
+    }, [tierThing])
 
     const checkFollow = () => {
         if(currentUser && currentUser.id !== imageAdminUID){
@@ -112,6 +121,116 @@ function ImageDetails() {
             if(found){
                 setFollow(true)
             }
+        }
+    }
+
+    const getTierThing = () => {
+        if(currentUser && currentUser.id !== imageAdminUID){
+            // Put the id of currentUser into the follow array
+            firestore.collection("tiers").where("uid", "==", imageAdminUID).orderBy("tier", "asc").get().then(snapshot => {
+                setTierThing(snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    uid: doc.data().uid,
+                    tier: doc.data().tier,
+                    userSigned: doc.data().userSigned,
+                })
+                ))
+            })
+        }
+    }
+
+    const checkTierThing = () => {
+        if(currentUser && currentUser.id !== imageAdminUID && tier){
+            // Put the id of currentUser into the follow array
+            const someArray = tierThing
+
+            switch (tier) {
+                case "tier1": {
+                    var count = 0
+                    someArray.map(x => {
+                        var newArray = x.userSigned.find(item => item == currentUser.id)
+                        if(!newArray){
+                            count = count + 1
+                        }
+
+                        if (count == someArray.length){
+                            setShow(false)
+                        }
+                    })
+
+                    break;
+                }
+                case "tier2": {
+                    var count = 0
+                    var nsomeArray = someArray.filter(item => item.tier !== "tier1")
+                    nsomeArray.map(x => {
+                        var newArray = x.userSigned.find(item => item == currentUser.id)
+                        if(!newArray){
+                            count = count + 1
+                        }
+
+                        if (count == nsomeArray.length){
+                            setShow(false)
+                        }
+                    })
+
+                    break;
+                }
+                case "tier3": {
+                    var count = 0
+                    someArray = someArray.filter(item => item.tier !== "tier1" && item.tier !== "tier2")
+                    someArray.map(x => {
+                        var newArray = x.userSigned.find(item => item == currentUser.id)
+                        if(!newArray){
+                            count = count + 1
+                        }
+
+                        if (count == someArray.length){
+                            setShow(false)
+                        }
+                    })
+
+                    break;
+                }
+                case "tier4": {
+                    var count = 0
+                    someArray = someArray.filter(item => item.tier !== "tier1" && item.tier !== "tier2" && item.tier !== "tier3")
+                    someArray.map(x => {
+                        var newArray = x.userSigned.find(item => item == currentUser.id)
+                        if(!newArray){
+                            count = count + 1
+                        }
+
+                        if (count == someArray.length){
+                            setShow(false)
+                        }
+                    })
+
+                    break;
+                }
+                case "tier5": {
+                    
+                    someArray = someArray.find(item => item.tier == "tier5")
+                    if(someArray) {
+                        var found2 = someArray.userSigned
+                        found2 = found2.find(item => item == currentUser.id)
+
+                        if(!found2){
+                            setShow(false)
+                        }
+                    }
+
+                    break;
+                }
+                default: {
+                    setShow(true)
+                }
+            }
+
+        }
+
+        if(!currentUser && tier !== ""){
+            setShow(false)
         }
     }
 
@@ -144,7 +263,13 @@ function ImageDetails() {
         }
     }
 
-    return (
+    if(!show) return(
+        <div>
+            Opps... có vẻ đây không phải là nơi dành cho bạn
+        </div>
+    )
+
+    if(show) return (
         <div className='imageDetails'>
 
             <div className='imageDetails_top'>

@@ -27,10 +27,14 @@ function CardReplyComment(props) {
 
   useEffect(() => {
     firestore.collection('users').doc(props.replyComment.uid).onSnapshot((snapshot) => {
-        setUserInfo({
-            displayName: snapshot.data().displayName,
-            avatar: snapshot.data().avatar,
-        })
+        try {
+            setUserInfo({
+                displayName: snapshot.data().displayName,
+                avatar: snapshot.data().avatar,
+            })
+        } catch (error) {
+            
+        }
     })
   }, [props.replyComment.cmid])
 

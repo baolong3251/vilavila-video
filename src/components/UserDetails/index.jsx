@@ -17,23 +17,9 @@ function UserDetails() {
   const [tierSigned, setTierSigned] = useState([])
 
   useEffect(() => {
-    firestore.collection('tiers').where('uid', '==', userID).onSnapshot(snapshot => {
+    firestore.collection('tiers').where('uid', '==', userID).orderBy("tier").onSnapshot(snapshot => {
+      try {
         setTiers(snapshot.docs.map(doc => ({
-          id: doc.id, 
-          uid: doc.data().uid,
-          tier: doc.data().tier,
-          cost: doc.data().cost,
-          desc: doc.data().desc,
-          userSigned: doc.data().userSigned,
-        })
-      ))
-    })
-  }, [userID])
-
-  useEffect(() => {
-    if(currentUser){
-      firestore.collection('tiers').where('userSigned', 'array-contains', currentUser.id).where('uid', '==', userID).onSnapshot(snapshot => {
-        setTierSigned(snapshot.docs.map(doc => ({
             id: doc.id, 
             uid: doc.data().uid,
             tier: doc.data().tier,
@@ -42,6 +28,28 @@ function UserDetails() {
             userSigned: doc.data().userSigned,
           })
         ))
+      } catch (error) {
+          
+      }  
+    })
+  }, [userID])
+
+  useEffect(() => {
+    if(currentUser){
+      firestore.collection('tiers').where('userSigned', 'array-contains', currentUser.id).where('uid', '==', userID).onSnapshot(snapshot => {
+        try {
+          setTierSigned(snapshot.docs.map(doc => ({
+              id: doc.id, 
+              uid: doc.data().uid,
+              tier: doc.data().tier,
+              cost: doc.data().cost,
+              desc: doc.data().desc,
+              userSigned: doc.data().userSigned,
+            })
+          ))
+        } catch (error) {
+          
+        }  
       })
     }
   }, [currentUser])

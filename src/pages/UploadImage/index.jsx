@@ -46,6 +46,7 @@ function UploadImage() {
     const [fileImages, setFileImages] = useState([]);
     const [progress, setProgress] = useState(0);
     const [fileImageUrl, setFileImageUrl] = useState([])
+    const [imageLength, setImageLength] = useState(-1)
 
     const handleChangePrivacy = (event) => {
         setPrivacy(event.target.value);
@@ -141,7 +142,7 @@ function UploadImage() {
 
     const handleUploadFireStore = () => {
         var idThing = imageId
-        if (fileImageUrl.length !== 0) {
+        if (fileImageUrl.length == imageLength) {
             
             if(idThing == ''){
                 firestore.collection('images').add({
@@ -172,10 +173,18 @@ function UploadImage() {
     } 
 
     const handleChangeFileImage = (e) => {
+        setImageLength(e.target.files.length)
         for (let i = 0; i < e.target.files.length; i++) {
             const newImage = e.target.files[i];
-            newImage["id"] = Math.random();
-            setFileImages((prevState) => [...prevState, newImage])
+            var pattern = /image-*/;
+            if (!newImage.type.match(pattern)) {
+                alert('File không hợp lệ...');
+                e.target.value = null;
+                return;
+            } else {
+                newImage["id"] = Math.random();
+                setFileImages((prevState) => [...prevState, newImage])
+            }
         }
     }
 
@@ -290,7 +299,7 @@ function UploadImage() {
                         <progress value={progress} max="100" /> 
                         :
                             <FormInput 
-                                label="Hình đại diện"
+                                label="Hình ảnh"
                                 type="file"
                                 accept="image/*"
                                 multiple

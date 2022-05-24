@@ -271,7 +271,7 @@ function AdminReport() {
             <TableHead>
               <TableRow>
                 <StyledTableCell>Tên nội dung</StyledTableCell>
-                <StyledTableCell align="center">Id nội dung</StyledTableCell>
+                {/* <StyledTableCell align="center">Id nội dung</StyledTableCell> */}
                 <StyledTableCell align="center">Nội dung báo cáo</StyledTableCell>
                 <StyledTableCell align="center">Tên người đăng</StyledTableCell>
                 <StyledTableCell align="center"></StyledTableCell>

@@ -10,7 +10,7 @@ function RandomVideo() {
     const [videosThing, setVideosThing] = useState([])
 
     useEffect(() => {
-        firestore.collection("videos").orderBy("point", "desc").limit(8).get().then(snapshot => {
+        firestore.collection("videos").where("tier", "==", "").where("privacy", "==", "public").orderBy("point", "asc").limit(8).get().then(snapshot => {
             setVideosThing(snapshot.docs.map(doc => ({
               documentID: doc.id, 
               title: doc.data().title, 
@@ -46,7 +46,7 @@ function RandomVideo() {
         <div className='container_video following-thing'>
             <div className='upper'>
                 <h2 className='label_video_type'>
-                    Một vài video nào đó <Link to={`/videos`}>Xem thêm</Link>
+                    Một vài video <Link to={`/videos`}>Xem thêm</Link>
                 </h2>
                 <div className='layout_video'>
 

@@ -16,12 +16,16 @@ function VideoCard(props) {
     useEffect(() => {
         if (props.video.videoAdminUID && channel.length == 0) {
             firestore.collection("users").doc(props.video.videoAdminUID).onSnapshot((snapshot) => {
-                setChannel([{
-                    id: snapshot.id,
-                    displayName: snapshot.data().displayName,
-                    avatar: snapshot.data().avatar,
-                    follow: snapshot.data().follow,
-                }])
+                try {
+                    setChannel([{
+                        id: snapshot.id,
+                        displayName: snapshot.data().displayName,
+                        avatar: snapshot.data().avatar,
+                        follow: snapshot.data().follow,
+                    }])
+                } catch (error) {
+                    
+                }  
             }) 
         }
     }, [props.video.videoAdminUID])

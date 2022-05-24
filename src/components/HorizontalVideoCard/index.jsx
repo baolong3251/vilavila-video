@@ -168,28 +168,39 @@ function HorizontalVideoCard(props) {
     //         Something
     //     </div>
     // )
-
+    console.log(tiers)
 
     return (
         <div className='horizontalVideoCard userVideos-videoCard'>
-
-            {props.video.tier !== "" ? 
+            
+            { 
+            props.video.tier !== "" ? 
+            currentUser ? currentUser.id !== props.video.videoAdminUID ?
             tiers ?
-                 props.video.tier !== tiers[0].tier ?
+                tiers.length !== 0 ?
+                 props.video.tier > tiers[0].tier ?
                 <div className='tier-thing'>
-                    {props.video.tier}
+                    Cấp bậc {props.video.tier.slice(4)}
                 </div> : null
-            :   <div className='tier-thing'>
-                    {props.video.tier}
-                </div>
+                :   <div className='tier-thing'>
+                        Cấp bậc {props.video.tier.slice(4)}
+                    </div> 
+            : <div className='tier-thing'>
+                Cấp bậc {props.video.tier.slice(4)}
+            </div>
             : null
+            : <div className='tier-thing'>
+                Cấp bậc {props.video.tier.slice(4)}
+            </div>
+            : null
+            
             }
 
             <Link to={
-                props.video.tier == "" ? `/video/${props.video.vid}` : 
-                tiers ? props.video.tier !== tiers[0].tier ? 
+                props.video.tier == "" ? `/video/${props.video.vid}` : currentUser ? currentUser.id !== props.video.videoAdminUID ?
+                tiers ? tiers.length !== 0 ? props.video.tier > tiers[0].tier ? 
                 `../${props.video.videoAdminUID}` : `/video/${props.video.vid}` :
-                `../${props.video.videoAdminUID}`} 
+                `../${props.video.videoAdminUID}` : `../${props.video.videoAdminUID}` : `/video/${props.video.vid}` : `../${props.video.videoAdminUID}`} 
                 className='horizontalVideoCard_videoCardsThumbnail'>
                 {props.video.thumbnail !== '' ? <img className='videoCards_img' src={props.video.thumbnail} />
                 :
@@ -224,19 +235,22 @@ function HorizontalVideoCard(props) {
             </Link>
             <div className='horizontalVideoCard_videoCardsInfo'>
                 <div className="horizontalVideoCard_text">
-                    <Link to={props.video.tier == "" ? `/video/${props.video.vid}` : 
-                            tiers ? props.video.tier !== tiers[0].tier ? 
+                    {props.video.privacy == "not-done" ? <Link to={`/user/private/${props.video.videoAdminUID}`}><h4>{props.video.title == "" ? "Chưa có tựa" : props.video.title}</h4></Link>
+                    :
+                    <Link to={props.video.tier == "" ? `/video/${props.video.vid}` : currentUser ? currentUser.id !== props.video.videoAdminUID ?
+                            tiers ? tiers.length !== 0 ? props.video.tier > tiers[0].tier ? 
                             `../${props.video.videoAdminUID}` : `/video/${props.video.vid}` :
-                            `../${props.video.videoAdminUID}`}>
+                            `../${props.video.videoAdminUID}` : `../${props.video.videoAdminUID}` : `/video/${props.video.vid}` : `../${props.video.videoAdminUID}`}>
                         <h4>{props.video.title}</h4>
                     </Link>
+                    }
 
-                    <Link to={props.video.tier == "" ? `/video/${props.video.vid}` : 
-                                tiers ? props.video.tier !== tiers[0].tier ? 
+                    <Link to={props.video.tier == "" ? `/video/${props.video.vid}` : currentUser ? currentUser.id !== props.video.videoAdminUID ?
+                                tiers ? tiers.length !== 0 ? props.video.tier > tiers[0].tier ? 
                                 `../${props.video.videoAdminUID}` : `/video/${props.video.vid}` :
-                                `../${props.video.videoAdminUID}`} 
+                                `../${props.video.videoAdminUID}` : `../${props.video.videoAdminUID}` : `/video/${props.video.vid}` : `../${props.video.videoAdminUID}`} 
                                 className="horizontalVideoCard_desc">
-                        <p style={{whiteSpace: "pre-line"}}>{props.video.desc}</p>
+                        <p style={{whiteSpace: "pre-line"}}>{props.video.desc == "" && props.video.privacy == "not-done" ? "Phần mô tả chưa thiết lập" : props.video.desc}</p>
                     </Link>
                     
                     <Link to={`/user/${props.video.videoAdminUID}`}>
@@ -261,6 +275,11 @@ function HorizontalVideoCard(props) {
                       <div onClick={() => toggleModal()} className='userVideos-videoCard-edit-option-item'>
                           <DeleteForeverIcon className='icon' />
                       </div>
+                      {props.video.tier !== "" ? 
+                        <div className='userVideos-videoCard-edit-option-item'>
+                            {props.video.tier.slice(4)}
+                        </div>
+                        : null}
                   </div>
                   
                   <AlertModal {...configModal}>

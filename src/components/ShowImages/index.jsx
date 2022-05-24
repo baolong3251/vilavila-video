@@ -7,6 +7,13 @@ import { fetchImagesStart } from '../../redux/Images/images.actions';
 import ImageCard from '../ImageCard';
 import LoadMore from '../Forms/LoadMore';
 
+import { doc, updateDoc, increment } from "firebase/firestore";
+import { firestore } from '../../firebase/utils';
+
+
+import moment from "moment-timezone"
+import 'moment/locale/vi';
+
 
 import Image from "../../assets/16526305592141308214.png"
 import AdOnTop from '../DisplayAd/AdOnTop';
@@ -23,6 +30,8 @@ function ShowImages() {
     const { filterTypeTag } = useParams()
     const { images, currentUser } = useSelector(mapState)
     const [pageSize, setPageSize] = useState(8)
+    const [dataForTagLog, setDataForTagLog] = useState([])
+    const [statGo, setStatGo] = useState(false)
 
     const { data, queryDoc, isLastPage } = images
 
@@ -33,10 +42,64 @@ function ShowImages() {
     }, [filterType])
 
     useEffect(() => {
-        dispatch(
-            fetchImagesStart({filterTypeTag, pageSize})
-        )
+        if(!filterType && filterTypeTag) {
+            dispatch(
+                fetchImagesStart({filterTypeTag, pageSize})
+            )
+            handleGetData()
+        }
     }, [filterTypeTag])
+
+    const handleGetData = () => {
+        firestore.collection("tagLog").where("tag", "==", filterTypeTag).where("contentType", "==", "image").get().then(snapshot => {
+            setDataForTagLog(snapshot.docs.map(doc => ({
+                    id: doc.id, 
+                    tag: doc.data().tag,
+                    lastUpdate: doc.data().lastUpdate,
+                })
+            ))
+        })
+
+        setStatGo(true)
+    }
+
+    useEffect(() => {
+        if(statGo) {
+            handleUpdateTrending()
+        }
+        
+    }, [dataForTagLog])
+
+    const handleUpdateTrending = () => {
+        var someArray = dataForTagLog
+        someArray = someArray.find(element => element.tag == filterTypeTag)
+        var date = new Date();
+        var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+        // var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+        if(someArray){
+            var newArr = someArray.lastUpdate
+            var time4 = moment(date).locale('vi').format("D")
+            var time5 = moment(newArr.toDate()).locale('vi').format("D")
+            if(time4 !== time5){
+                const tagRef = doc(firestore, "tagLog", someArray.id);
+
+                updateDoc(tagRef, {
+                    NumOfInteractions: increment(1)
+                });
+            }
+
+        } else {
+            firestore.collection("tagLog").add({
+                
+                tag: filterTypeTag,
+                NumOfInteractions: 1,
+                lastUpdate: firstDay,
+                contentType: "image",
+                    
+            })
+        }
+    }
 
     const handleLoadMore = () => {
         dispatch(

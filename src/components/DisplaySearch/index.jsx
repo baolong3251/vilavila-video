@@ -56,7 +56,7 @@ function DisplaySearch() {
       }, [searchDataTemp])
 
       const getData = async (term) => {
-        const postRef = firestore.collection('videos')
+        const postRef = firestore.collection('videos').where("tier", "==", "").where("privacy", "==", "public")
         var arr1 = []
         var arr2 = []
 

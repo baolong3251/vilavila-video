@@ -38,7 +38,7 @@ function ShowMoreVideos() {
     }, [userArr])
 
     const getVideosData = (id) => {
-        firestore.collection("videos").where("videoAdminUID", "in", id).orderBy("point", "desc").get().then(snapshot => {
+        firestore.collection("videos").where("videoAdminUID", "in", id).where("tier", "==", "").where("privacy", "==", "public").orderBy("point", "asc").get().then(snapshot => {
             setVideosThing(snapshot.docs.map(doc => ({
               documentID: doc.id, 
               title: doc.data().title, 
@@ -72,7 +72,7 @@ function ShowMoreVideos() {
         <div className='container_video following-thing'>
             <div className='upper'>
                 <h2 className='label_video_type'>
-                    Các bạn có thể thích...
+                    Các bạn có thể thích
                 </h2>
                 <div className='layout_video'>
 

@@ -33,6 +33,8 @@ function VideoDetails() {
     const [channel, setChannel] = useState([])
     const [follow, setFollow] = useState(false)
     const [userInfo, setUserInfo] = useState([])
+    const [tierThing, setTierThing] = useState([])
+    const [show, setShow] = useState(true)
 
     const {
         category,
@@ -44,6 +46,7 @@ function VideoDetails() {
         videoAdminUID,
         views,
         point,
+        tier,
     } = video
 
     useEffect(() => {
@@ -61,7 +64,7 @@ function VideoDetails() {
 
     useEffect(() => {
         if (videoAdminUID) {
-
+            
             firestore.collection("users").doc(videoAdminUID).onSnapshot((snapshot) => {
                 try {
                     setChannel([{
@@ -75,6 +78,8 @@ function VideoDetails() {
                     
                 }
             }) 
+
+            
         }
     }, [videoAdminUID])
 
@@ -100,9 +105,20 @@ function VideoDetails() {
     }, [currentUser])
 
     useEffect(() => {
-        if(channel.length > 0)
-        checkFollow()
+        if(channel.length > 0){
+            checkFollow()
+            getTierThing()
+        }
     }, [channel])
+
+    useEffect(() => {
+        if(tierThing.length > 0){
+            checkTierThing()
+        }
+    }, [tierThing])
+
+    console.log(tier)
+    console.log(tierThing)
 
     const checkFollow = () => {
         if(currentUser && currentUser.id !== videoAdminUID){
@@ -116,6 +132,116 @@ function VideoDetails() {
             if(found){
                 setFollow(true)
             }
+        }
+    }
+
+    const getTierThing = () => {
+        if(currentUser && currentUser.id !== videoAdminUID){
+            // Put the id of currentUser into the follow array
+            firestore.collection("tiers").where("uid", "==", videoAdminUID).orderBy("tier", "asc").get().then(snapshot => {
+                setTierThing(snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    uid: doc.data().uid,
+                    tier: doc.data().tier,
+                    userSigned: doc.data().userSigned,
+                })
+                ))
+            })
+        }
+    }
+
+    const checkTierThing = () => {
+        if(currentUser && currentUser.id !== videoAdminUID && tier){
+            // Put the id of currentUser into the follow array
+            const someArray = tierThing
+
+            switch (tier) {
+                case "tier1": {
+                    var count = 0
+                    someArray.map(x => {
+                        var newArray = x.userSigned.find(item => item == currentUser.id)
+                        if(!newArray){
+                            count = count + 1
+                        }
+
+                        if (count == someArray.length){
+                            setShow(false)
+                        }
+                    })
+
+                    break;
+                }
+                case "tier2": {
+                    var count = 0
+                    var nsomeArray = someArray.filter(item => item.tier !== "tier1")
+                    nsomeArray.map(x => {
+                        var newArray = x.userSigned.find(item => item == currentUser.id)
+                        if(!newArray){
+                            count = count + 1
+                        }
+
+                        if (count == nsomeArray.length){
+                            setShow(false)
+                        }
+                    })
+
+                    break;
+                }
+                case "tier3": {
+                    var count = 0
+                    var nsomeArray = someArray.filter(item => item.tier !== "tier1" && item.tier !== "tier2")
+                    nsomeArray.map(x => {
+                        var newArray = x.userSigned.find(item => item == currentUser.id)
+                        if(!newArray){
+                            count = count + 1
+                        }
+
+                        if (count == someArray.length){
+                            setShow(false)
+                        }
+                    })
+
+                    break;
+                }
+                case "tier4": {
+                    var count = 0
+                    var nsomeArray = someArray.filter(item => item.tier !== "tier1" && item.tier !== "tier2" && item.tier !== "tier3")
+                    nsomeArray.map(x => {
+                        var newArray = x.userSigned.find(item => item == currentUser.id)
+                        if(!newArray){
+                            count = count + 1
+                        }
+
+                        if (count == someArray.length){
+                            setShow(false)
+                        }
+                    })
+
+                    break;
+                }
+                case "tier5": {
+                    
+                    var nsomeArray = someArray.find(item => item.tier == "tier5")
+                    if(nsomeArray) {
+                        var found2 = nsomeArray.userSigned
+                        found2 = found2.find(item => item == currentUser.id)
+
+                        if(!found2){
+                            setShow(false)
+                        }
+                    }
+
+                    break;
+                }
+                default: {
+                    setShow(true)
+                }
+            }
+
+        }
+
+        if(!currentUser && tier !== ""){
+            setShow(false)
         }
     }
 
@@ -152,7 +278,13 @@ function VideoDetails() {
         setFollow(false)
     }
 
-    return (
+    if(!show) return(
+        <div>
+            Opps... có vẻ đây không phải là nơi dành cho bạn
+        </div>
+    )
+
+    if(show) return (
         <div className='videoDetails'>
 
             <div className='videoDetails_top'>

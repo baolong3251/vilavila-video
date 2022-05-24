@@ -35,7 +35,7 @@ function UserEditVideo() {
         if (currentUser && videoID && currentUser.id == userID && video.length == 0) {
             firestore.collection("videos").doc(videoID).get().then((snapshot) => {
                 try {
-                    setVideo([...video,{
+                    setVideo([{
                         vid: snapshot.id, 
                         title: snapshot.data().title,
                         views: snapshot.data().views,
@@ -54,10 +54,11 @@ function UserEditVideo() {
                 }
             }) 
         }
-    }, [currentUser])
+    }, [videoID])
 
     useEffect(() => {
         if (currentUser && videoID && currentUser.id == userID && tiers.length == 0) {
+            
             firestore.collection("tiers").where("uid", "==", currentUser.id).get().then((snapshot) => {
                 setTiers(snapshot.docs.map(doc => ({
                     tid: doc.id, 
@@ -68,7 +69,9 @@ function UserEditVideo() {
                   })
                 ))
             })
-            
+        }
+
+        if(video.length > 0) {
             writeInfo()
         }
     }, [video])
@@ -130,7 +133,7 @@ function UserEditVideo() {
     )
 
     const writeInfo = () => {
-        if(video.length != 0) {
+        if(video.length > 0) {
             setNewTitle(video[0].title)
             setNewDesc(video[0].desc)
             setTierChoice(video[0].tier)
@@ -192,6 +195,8 @@ function UserEditVideo() {
         if(tierChoice) { 
             tier = tierChoice
         }
+        var titleForSearch = newTitle.toLowerCase()
+        var titleForSearchRev = newTitle.split("").reverse().join("");
         if(fileImageUrl !== "" && video[0].thumbnail !== ""){
             firestore.collection('videos').doc(videoID).set({
                 title: newTitle,
@@ -200,6 +205,8 @@ function UserEditVideo() {
                 tier: tier,
                 tags: tags,
                 privacy: privacyChoice,
+                titleForSearch: titleForSearch,
+                titleForSearchRev: titleForSearchRev,
             }, { merge: true }).then(
                 handleDeleteThumbnail(video[0].thumbnail)
             )
@@ -212,6 +219,8 @@ function UserEditVideo() {
                 tier: tier,
                 tags: tags,
                 privacy: privacyChoice,
+                titleForSearch: titleForSearch,
+                titleForSearchRev: titleForSearchRev,
             }, { merge: true }).then(
             )
         }
@@ -222,9 +231,11 @@ function UserEditVideo() {
                 tier: tier,
                 tags: tags,
                 privacy: privacyChoice,
+                titleForSearch: titleForSearch,
+                titleForSearchRev: titleForSearchRev,
             }, { merge: true })
         }
-        alert('success')
+        alert('Các thay đổi đã được ghi lại!!')
         resetForm()
         history.goBack()
     }
@@ -303,13 +314,14 @@ function UserEditVideo() {
 
             <div className='userVideos-videoCard-container'>
                 <FormControl className='userVideos-videoCard-radioBoxContainer' component="fieldset">
-                    <label>Tier</label>
+                    <label>Cấp bậc</label>
                     <RadioGroup className='userVideos-videoCard-radioBox' aria-label="gender" name="gender1" value={tierChoice} onChange={handleChangeTierChoice}>
-                        <FormControlLabel disabled={tiers.find(item => item.tier == "tier1") ? null : "disabled"} value="tier1" control={<Radio />} label="Tier 1" />
-                        <FormControlLabel disabled={tiers.find(item => item.tier == "tier2") ? null : "disabled"} value="tier2" control={<Radio />} label="Tier 2" />
-                        <FormControlLabel disabled={tiers.find(item => item.tier == "tier3") ? null : "disabled"} value="tier3" control={<Radio />} label="Tier 3" />
-                        <FormControlLabel disabled={tiers.find(item => item.tier == "tier4") ? null : "disabled"} value="tier4" control={<Radio />} label="Tier 4" />
-                        <FormControlLabel disabled={tiers.find(item => item.tier == "tier5") ? null : "disabled"} value="tier5" control={<Radio />} label="Tier 5" />
+                        <FormControlLabel value="" control={<Radio />} label="Cấp bậc 0" />
+                        <FormControlLabel disabled={tiers.find(item => item.tier == "tier1") ? null : "disabled"} value="tier1" control={<Radio />} label="Cấp bậc 1" />
+                        <FormControlLabel disabled={tiers.find(item => item.tier == "tier2") ? null : "disabled"} value="tier2" control={<Radio />} label="Cấp bậc 2" />
+                        <FormControlLabel disabled={tiers.find(item => item.tier == "tier3") ? null : "disabled"} value="tier3" control={<Radio />} label="Cấp bậc 3" />
+                        <FormControlLabel disabled={tiers.find(item => item.tier == "tier4") ? null : "disabled"} value="tier4" control={<Radio />} label="Cấp bậc 4" />
+                        <FormControlLabel disabled={tiers.find(item => item.tier == "tier5") ? null : "disabled"} value="tier5" control={<Radio />} label="Cấp bậc 5" />
                     </RadioGroup>
                 </FormControl>
             </div>
